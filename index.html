@@ -131,7 +131,6 @@
       <div class="flex items-center justify-between">
         <a href="#hero" class="group inline-flex items-baseline gap-2">
           <span class="font-serif text-2xl font-bold tracking-tight text-brand-charcoal group-hover:text-brand-terracotta transition-colors">Pantry & Table</span>
-          <span class="text-[11px] uppercase tracking-widest text-brand-terracotta font-semibold">The Grove Mall</span>
         </a>
         <!-- Mobile Print Shortcut -->
         <button onclick="window.print()" class="md:hidden p-2 text-brand-charcoal hover:text-brand-terracotta transition" aria-label="Print list">
@@ -184,19 +183,15 @@
           Tested for our pantry runs to <strong>Checkers at The Grove Mall</strong>. Powered by the high-yield <strong class="text-brand-terracotta">Lentil-Stretched Mince Technique</strong>, batch root vegetables, and 5-minute weeknight reheats.
         </p>
 
-        <!-- Dynamic Spend Overview Badges -->
-        <div class="grid grid-cols-3 gap-3 pt-1 max-w-lg">
-          <div class="bg-white p-3 rounded-2xl border border-brand-border shadow-xs">
-            <span class="block text-[11px] uppercase tracking-wider text-brand-muted font-semibold">Budget Cap</span>
-            <span class="num-tabular text-lg sm:text-xl font-bold text-brand-charcoal">R2,500</span>
-          </div>
-          <div class="bg-white p-3 rounded-2xl border border-brand-border shadow-xs">
+        <!-- Dynamic Spend & Pantry Overview Badges -->
+        <div class="grid grid-cols-2 gap-3 pt-1 max-w-sm sm:max-w-md">
+          <div class="bg-white p-3 sm:p-3.5 rounded-2xl border border-brand-border shadow-xs">
             <span class="block text-[11px] uppercase tracking-wider text-brand-sage font-semibold">Month Total</span>
             <span id="hero-month-total" class="num-tabular text-lg sm:text-xl font-bold text-brand-sage">~R1,476</span>
           </div>
-          <div class="bg-brand-sageLight p-3 rounded-2xl border border-brand-sage/30 shadow-xs">
-            <span class="block text-[11px] uppercase tracking-wider text-brand-sage font-semibold">Safe Margin</span>
-            <span id="hero-margin-total" class="num-tabular text-lg sm:text-xl font-bold text-brand-sage">+R1,024</span>
+          <div class="bg-white p-3 sm:p-3.5 rounded-2xl border border-brand-border shadow-xs">
+            <span class="block text-[11px] uppercase tracking-wider text-brand-muted font-semibold">Pantry Basket</span>
+            <span id="hero-pantry-items-count" class="num-tabular text-lg sm:text-xl font-bold text-brand-charcoal">29 Items</span>
           </div>
         </div>
 
@@ -1905,17 +1900,15 @@
       tableContainer.innerHTML = html;
     }
 
-    // --- DYNAMIC HERO FINANCIAL CALCULATIONS ---
+    // --- DYNAMIC HERO FINANCIAL & BASKET CALCULATIONS ---
     function updateHeroFinancials() {
       const monthTotal = SHOPPING_ITEMS.reduce((sum, item) => sum + item.price, 0);
-      const cap = 2500;
-      const margin = cap - monthTotal;
 
       const totalEl = document.getElementById('hero-month-total');
-      const marginEl = document.getElementById('hero-margin-total');
+      const itemsEl = document.getElementById('hero-pantry-items-count');
 
       if (totalEl) totalEl.innerText = `~R${monthTotal.toFixed(0)}`;
-      if (marginEl) marginEl.innerText = `+R${margin.toFixed(0)}`;
+      if (itemsEl) itemsEl.innerText = `${SHOPPING_ITEMS.length} Items`;
     }
 
     // Initialize application on DOM ready
