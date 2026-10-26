@@ -1,0 +1,1931 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Checkers Grocery & Meal Blueprint • The Grove Mall Edition</title>
+  
+  <!-- Typography: DM Sans for warm, modern legibility; Playfair Display for editorial moments; JetBrains Mono for prices -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,400..700;1,9..40,400..700&family=Playfair+Display:ital,wght@0,600;0,700;1,600&family=JetBrains+Mono:wght@500;600&display=swap" rel="stylesheet">
+  
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          colors: {
+            brand: {
+              cream: '#FAF7F2',
+              sand: '#F2ECE1',
+              sandDark: '#E5DED1',
+              terracotta: '#C85338',
+              terracottaHover: '#B0442B',
+              terracottaDark: '#8F3520',
+              sage: '#436345',
+              sageLight: '#E5EDE6',
+              charcoal: '#1A1816',
+              ink: '#262320',
+              muted: '#4A4641',
+              border: '#DCD4C6'
+            }
+          },
+          fontFamily: {
+            serif: ['"Playfair Display"', 'Georgia', 'serif'],
+            sans: ['"DM Sans"', '-apple-system', 'BlinkMacSystemFont', 'sans-serif'],
+            mono: ['"JetBrains Mono"', 'ui-monospace', 'monospace']
+          }
+        }
+      }
+    }
+  </script>
+
+  <style>
+    body {
+      background-color: #FAF7F2;
+      color: #1A1816;
+      font-family: 'DM Sans', -apple-system, sans-serif;
+      -webkit-font-smoothing: antialiased;
+    }
+
+    ::selection {
+      background-color: #C85338;
+      color: #FFFFFF;
+    }
+
+    .num-tabular {
+      font-family: 'JetBrains Mono', monospace;
+      font-variant-numeric: tabular-nums;
+    }
+
+    .custom-scroll::-webkit-scrollbar {
+      height: 6px;
+      width: 6px;
+    }
+    .custom-scroll::-webkit-scrollbar-track {
+      background: #F2ECE1;
+    }
+    .custom-scroll::-webkit-scrollbar-thumb {
+      background-color: #C8533840;
+      border-radius: 9999px;
+    }
+
+    /* Trolley Mode Specifics */
+    .trolley-mode-active {
+      background-color: #F4F1EA !important;
+    }
+    .trolley-item-btn:focus-visible {
+      outline: 2px solid #C85338;
+      outline-offset: 2px;
+    }
+
+    /* Print Optimization: Clean sheet for active tab or grocery list */
+    @media print {
+      body {
+        background-color: #FFFFFF !important;
+        color: #000000 !important;
+      }
+      .no-print, header, nav, #hero, footer, button, .tab-btn, .shop-filter-btn, #toast-undo, #trolley-sticky-bar {
+        display: none !important;
+      }
+      .tab-view {
+        display: block !important;
+      }
+      #view-shopping {
+        display: block !important;
+        padding: 0 !important;
+        margin: 0 !important;
+      }
+      #shopping-cards-container {
+        display: block !important;
+      }
+      .shopping-category-card {
+        break-inside: avoid;
+        margin-bottom: 1.5rem;
+        border: 1px solid #777 !important;
+        box-shadow: none !important;
+        background: #FFFFFF !important;
+      }
+      #recipe-modal {
+        display: none !important;
+      }
+    }
+  </style>
+</head>
+<body class="min-h-screen flex flex-col selection:bg-brand-terracotta selection:text-white">
+
+  <!-- TOP CONTEXT BANNER -->
+  <aside aria-label="Store Location" class="no-print bg-brand-charcoal text-brand-sand text-xs py-2 px-4 text-center font-medium tracking-wide border-b border-brand-charcoal/80">
+    <div class="max-w-6xl mx-auto flex items-center justify-center gap-2">
+      <svg class="w-3.5 h-3.5 text-brand-terracotta flex-shrink-0" fill="currentColor" viewBox="0 0 20 20" aria-hidden="true">
+        <path fill-rule="evenodd" d="M5.05 4.05a7 7 0 119.9 9.9L10 18.9l-4.95-4.95a7 7 0 010-9.9zM10 11a2 2 0 100-4 2 2 0 000 4z" clip-rule="evenodd"></path>
+      </svg>
+      <span><strong class="text-white">Checkers The Grove Mall</strong> • Willow Park Manor, Pretoria East • Monthly Cap: <span class="num-tabular font-semibold text-brand-terracotta">R1,500</span></span>
+    </div>
+  </aside>
+
+  <!-- NAVIGATION HEADER -->
+  <header class="no-print sticky top-0 z-40 bg-[#FAF7F2]/95 backdrop-blur-md border-b border-brand-border">
+    <div class="max-w-6xl mx-auto px-4 sm:px-6 py-3.5 flex flex-col md:flex-row md:items-center md:justify-between gap-3">
+      <div class="flex items-center justify-between">
+        <a href="#hero" class="group inline-flex items-baseline gap-2">
+          <span class="font-serif text-2xl font-bold tracking-tight text-brand-charcoal group-hover:text-brand-terracotta transition-colors">Pantry & Table</span>
+          <span class="text-[11px] uppercase tracking-widest text-brand-terracotta font-semibold">The Grove Mall</span>
+        </a>
+        <!-- Mobile Print Shortcut -->
+        <button onclick="window.print()" class="md:hidden p-2 text-brand-charcoal hover:text-brand-terracotta transition" aria-label="Print list">
+          <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 17h2a2 2 0 002-2v-4a2 2 0 00-2-2H5a2 2 0 00-2 2v4a2 2 0 002 2h2m2 4h6a2 2 0 002-2v-4H7v4a2 2 0 002 2zm8-12V5a2 2 0 00-2-2H9a2 2 0 00-2 2v4h10z"></path></svg>
+        </button>
+      </div>
+
+      <!-- Navigation Tabs -->
+      <nav class="flex items-center gap-1.5 sm:gap-2 overflow-x-auto pb-1 md:pb-0 custom-scroll text-sm" aria-label="Primary navigation">
+        <button onclick="switchTab('recipes')" id="tab-btn-recipes" class="tab-btn active px-4 py-2 rounded-full font-semibold transition-all bg-brand-terracotta text-white shadow-sm whitespace-nowrap flex items-center gap-1.5">
+          <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253"></path></svg>
+          <span>Recipes & Rules</span>
+        </button>
+        <button onclick="switchTab('shopping')" id="tab-btn-shopping" class="tab-btn px-4 py-2 rounded-full font-semibold transition-all bg-brand-sand text-brand-charcoal hover:bg-brand-sandDark whitespace-nowrap flex items-center gap-1.5">
+          <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 11V7a4 4 0 00-8 0v4M5 9h14l1 12H4L5 9z"></path></svg>
+          <span>Checkers Trolley</span>
+          <span id="nav-trolley-badge" class="ml-1 px-2 py-0.2 rounded-full text-[10px] font-bold num-tabular bg-brand-charcoal text-white">0</span>
+        </button>
+        <button onclick="switchTab('schedule')" id="tab-btn-schedule" class="tab-btn px-4 py-2 rounded-full font-semibold transition-all bg-brand-sand text-brand-charcoal hover:bg-brand-sandDark whitespace-nowrap flex items-center gap-1.5">
+          <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"></path></svg>
+          <span>4-Week Calendar</span>
+        </button>
+        <button onclick="switchTab('prep')" id="tab-btn-prep" class="tab-btn px-4 py-2 rounded-full font-semibold transition-all bg-brand-sand text-brand-charcoal hover:bg-brand-sandDark whitespace-nowrap flex items-center gap-1.5">
+          <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
+          <span>90-Min Prep</span>
+        </button>
+      </nav>
+
+      <!-- Desktop Action Buttons -->
+      <div class="hidden lg:flex items-center gap-2">
+        <button onclick="window.print()" class="px-3.5 py-2 rounded-full text-xs font-semibold bg-white border border-brand-border text-brand-charcoal hover:bg-brand-sand transition shadow-xs flex items-center gap-1.5" title="Print a clean copy for supermarket trips">
+          <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 17h2a2 2 0 002-2v-4a2 2 0 00-2-2H5a2 2 0 00-2 2v4a2 2 0 002 2h2m2 4h6a2 2 0 002-2v-4H7v4a2 2 0 002 2zm8-12V5a2 2 0 00-2-2H9a2 2 0 00-2 2v4h10z"></path></svg>
+          <span>Print List</span>
+        </button>
+      </div>
+    </div>
+  </header>
+
+  <!-- HERO SECTION -->
+  <section id="hero" class="border-b border-brand-border bg-gradient-to-b from-[#FAF7F2] to-brand-sand/40 py-10 md:py-14">
+    <div class="max-w-6xl mx-auto px-4 sm:px-6 grid lg:grid-cols-12 gap-8 items-center">
+      <div class="lg:col-span-7 space-y-4">
+        <div class="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-brand-sageLight text-brand-sage text-xs font-semibold uppercase tracking-wider">
+          <span>Checkers Pretoria East • Monthly Meal Strategy</span>
+        </div>
+        <h1 class="font-serif text-3xl sm:text-4xl lg:text-5xl font-bold tracking-tight text-brand-charcoal leading-[1.15]">
+          Hearty, wholesome dinners crafted with real discipline.
+        </h1>
+        <p class="text-sm sm:text-base text-brand-muted max-w-xl font-normal leading-relaxed">
+          Tested for our pantry runs to <strong>Checkers at The Grove Mall</strong>. Powered by the high-yield <strong class="text-brand-terracotta">Lentil-Stretched Mince Technique</strong>, batch root vegetables, and 5-minute weeknight reheats.
+        </p>
+
+        <!-- Dynamic Spend Overview Badges -->
+        <div class="grid grid-cols-3 gap-3 pt-1 max-w-lg">
+          <div class="bg-white p-3 rounded-2xl border border-brand-border shadow-xs">
+            <span class="block text-[11px] uppercase tracking-wider text-brand-muted font-semibold">Budget Cap</span>
+            <span class="num-tabular text-lg sm:text-xl font-bold text-brand-charcoal">R2,500</span>
+          </div>
+          <div class="bg-white p-3 rounded-2xl border border-brand-border shadow-xs">
+            <span class="block text-[11px] uppercase tracking-wider text-brand-sage font-semibold">Month Total</span>
+            <span id="hero-month-total" class="num-tabular text-lg sm:text-xl font-bold text-brand-sage">~R1,476</span>
+          </div>
+          <div class="bg-brand-sageLight p-3 rounded-2xl border border-brand-sage/30 shadow-xs">
+            <span class="block text-[11px] uppercase tracking-wider text-brand-sage font-semibold">Safe Margin</span>
+            <span id="hero-margin-total" class="num-tabular text-lg sm:text-xl font-bold text-brand-sage">+R1,024</span>
+          </div>
+        </div>
+
+        <div class="flex flex-wrap items-center gap-3 pt-2">
+          <button onclick="switchTab('shopping')" class="px-5 py-2.5 rounded-full bg-brand-terracotta hover:bg-brand-terracottaHover text-white font-medium text-sm transition shadow-sm flex items-center gap-2">
+            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 11V7a4 4 0 00-8 0v4M5 9h14l1 12H4L5 9z"></path></svg>
+            <span>Open In-Store Trolley</span>
+          </button>
+          <button onclick="openRecipeModal('mince')" class="px-5 py-2.5 rounded-full bg-white hover:bg-brand-sand text-brand-charcoal border border-brand-border font-medium text-sm transition">
+            View Mince Technique
+          </button>
+        </div>
+      </div>
+
+      <!-- Hero Visual Card -->
+      <div class="lg:col-span-5">
+        <div class="relative rounded-3xl overflow-hidden shadow-lg border-2 border-brand-border aspect-[4/3] group cursor-pointer" onclick="openRecipeModal('mince')">
+          <img 
+            src="https://images.unsplash.com/photo-1551183053-bf91a1d81141?auto=format&fit=crop&w=1000&q=80" 
+            alt="Lentil Stretched Savoury Bolognese" 
+            class="w-full h-full object-cover group-hover:scale-102 transition-transform duration-500"
+            onerror="this.onerror=null; this.parentElement.classList.add('bg-brand-sand'); this.style.display='none';"
+          >
+          <div class="absolute inset-0 bg-gradient-to-t from-black/90 via-black/35 to-transparent flex flex-col justify-end p-6 text-white">
+            <div class="flex items-center justify-between">
+              <span class="text-xs uppercase tracking-widest text-brand-sand font-bold">Featured Master Dish</span>
+              <span class="text-[11px] bg-white/20 backdrop-blur-md px-2.5 py-0.5 rounded-full font-medium">Click to view →</span>
+            </div>
+            <h3 class="font-serif text-2xl font-bold mt-1 text-white">Lentil-Stretched Savoury Mince</h3>
+            <p class="text-xs text-brand-sand/90 mt-1">500g lean mince + 1 cup brown lentils + grated carrots = 6–8 rich portions.</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- MAIN CONTENT CONTAINER -->
+  <main class="max-w-6xl mx-auto px-4 sm:px-6 py-8 flex-1 w-full">
+
+    <!-- ==================== TAB 1: RECIPES & MASTERCLASS ==================== -->
+    <div id="view-recipes" class="tab-view space-y-10">
+      
+      <!-- WEEK 3 MASTERCLASS TEASER -->
+      <section id="week3-spotlight" class="bg-white rounded-3xl border border-brand-border p-6 sm:p-8 shadow-xs">
+        <div class="flex flex-col lg:flex-row gap-6 items-start">
+          <div class="lg:w-7/12 space-y-3">
+            <div class="inline-flex items-center gap-1.5 px-3 py-0.5 rounded-full bg-brand-terracotta/10 text-brand-terracotta text-xs font-semibold uppercase tracking-wider">
+              <span>Anchor Culinary Strategy</span>
+            </div>
+            <h2 class="font-serif text-2xl sm:text-3xl font-bold text-brand-charcoal">
+              The Lentil-Stretched Mince Technique
+            </h2>
+            <p class="text-xs sm:text-sm text-brand-muted leading-relaxed">
+              Instead of cooking a tiny portion of mince that vanishes in one evening, combine <strong>500g lean beef or chicken mince</strong> with <strong>1 cup of par-cooked brown lentils</strong> and <strong>2 finely grated carrots</strong>. The lentils absorb the pan drippings and beef stock, expanding into <strong>6–8 full dinner portions</strong> from just R62 worth of meat.
+            </p>
+
+            <div class="pt-2 grid grid-cols-2 sm:grid-cols-4 gap-2 text-xs">
+              <div class="p-2.5 rounded-xl bg-brand-sand/50 border border-brand-border">
+                <span class="font-bold text-brand-terracotta block">1. Bolognese</span>
+                <span class="text-[11px] text-brand-muted">Over spaghetti</span>
+              </div>
+              <div class="p-2.5 rounded-xl bg-brand-sand/50 border border-brand-border">
+                <span class="font-bold text-brand-terracotta block">2. Cottage Pie</span>
+                <span class="text-[11px] text-brand-muted">Mashed potato lid</span>
+              </div>
+              <div class="p-2.5 rounded-xl bg-brand-sand/50 border border-brand-border">
+                <span class="font-bold text-brand-terracotta block">3. Jacket Spuds</span>
+                <span class="text-[11px] text-brand-muted">Stuffed potatoes</span>
+              </div>
+              <div class="p-2.5 rounded-xl bg-brand-sand/50 border border-brand-border">
+                <span class="font-bold text-brand-terracotta block">4. Stiff Pap</span>
+                <span class="text-[11px] text-brand-muted">Saturday comfort</span>
+              </div>
+            </div>
+          </div>
+
+          <div class="lg:w-5/12 w-full bg-brand-sand/40 p-5 rounded-2xl border border-brand-border space-y-3">
+            <div class="flex items-center justify-between">
+              <span class="text-xs uppercase font-bold text-brand-charcoal">Checkers Top-Up Cost</span>
+              <span class="num-tabular text-xl font-bold text-brand-terracotta">R244.00</span>
+            </div>
+            <p class="text-xs text-brand-muted">Covers 1kg mince (freeze 500g!), 400g cheddar cheese, 1L milk, and 2 loaves of bread for the entire week.</p>
+            <div class="pt-2">
+              <button onclick="openRecipeModal('mince')" class="w-full py-2.5 px-4 rounded-xl bg-brand-terracotta hover:bg-brand-terracottaHover text-white text-xs font-semibold transition shadow-xs flex items-center justify-center gap-1.5">
+                <span>Open Full Recipe & Cooking Steps</span>
+                <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14 5l7 7m0 0l-7 7m7-7H3"></path></svg>
+              </button>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- PANTRY & KITCHEN HABITS -->
+      <section class="bg-brand-sand/30 rounded-3xl border border-brand-border p-6 sm:p-8">
+        <div class="max-w-2xl mb-6">
+          <span class="inline-flex items-center gap-1.5 px-3 py-0.5 rounded-full bg-brand-sageLight text-brand-sage text-xs font-semibold uppercase tracking-wider mb-2">
+            Pantry & Food Storage Discipline
+          </span>
+          <h3 class="font-serif text-2xl font-bold text-brand-charcoal">
+            Three Golden Food Prep & Preservation Rules
+          </h3>
+          <p class="text-xs text-brand-muted mt-1 leading-relaxed">
+            These habits keep fresh produce from spoiling, keep active weeknight cooking under 20 minutes, and protect your food budget.
+          </p>
+        </div>
+
+        <div class="grid md:grid-cols-3 gap-4">
+          <!-- Rule 1 -->
+          <div class="bg-white p-5 rounded-2xl border border-brand-border shadow-xs space-y-2">
+            <div class="w-7 h-7 rounded-full bg-brand-terracotta/10 text-brand-terracotta font-mono font-bold text-xs flex items-center justify-center">1</div>
+            <h4 class="font-serif font-bold text-base text-brand-charcoal">The Lentil Multiplier</h4>
+            <p class="text-xs text-brand-muted leading-relaxed">
+              When cooking ground mince or stews, simmer 1 cup of dry brown lentils separately until tender-firm. Stir them into browned meat with grated carrots. They drink up meat juices and double sauce yield with zero dilution of flavor.
+            </p>
+          </div>
+
+          <!-- Rule 2 -->
+          <div class="bg-white p-5 rounded-2xl border border-brand-border shadow-xs space-y-2">
+            <div class="w-7 h-7 rounded-full bg-brand-terracotta/10 text-brand-terracotta font-mono font-bold text-xs flex items-center justify-center">2</div>
+            <h4 class="font-serif font-bold text-base text-brand-charcoal">The Day-Old Rice Protocol</h4>
+            <p class="text-xs text-brand-muted leading-relaxed">
+              When boiling rice on Monday, cook an extra 2 cups. Spread the extra rice flat in a shallow container and chill uncovered for an hour before sealing. This dries surface starch, guaranteeing crisp fried rice on Friday instead of soggy mush.
+            </p>
+          </div>
+
+          <!-- Rule 3 -->
+          <div class="bg-white p-5 rounded-2xl border border-brand-border shadow-xs space-y-2">
+            <div class="w-7 h-7 rounded-full bg-brand-terracotta/10 text-brand-terracotta font-mono font-bold text-xs flex items-center justify-center">3</div>
+            <h4 class="font-serif font-bold text-base text-brand-charcoal">3-Week Cabbage Preservation</h4>
+            <p class="text-xs text-brand-muted leading-relaxed">
+              Keep the whole green cabbage dry and unwashed in the crisper drawer. When preparing dinner, do not slice the head in half; peel off only the individual outer leaves you need and shred them. An intact head easily stays crisp for over 3 weeks.
+            </p>
+          </div>
+        </div>
+      </section>
+
+      <!-- RECIPE REPERTOIRE (ALL 15 RECIPES) -->
+      <section>
+        <div class="flex flex-col sm:flex-row sm:items-end justify-between gap-4 mb-4">
+          <div>
+            <div class="inline-flex items-center gap-2 px-2.5 py-1 rounded-full bg-brand-terracotta/10 text-brand-terracotta text-[11px] font-semibold uppercase tracking-wider mb-2">
+              <span>Expanded Catalog</span> • <span>15 Total Recipes</span>
+            </div>
+            <h3 class="font-serif text-2xl font-bold text-brand-charcoal">Monthly Recipe Repertoire</h3>
+            <p class="text-xs text-brand-muted mt-1">High-yield comfort staples plus 8 versatile pantry creations from your exact Checkers grocery basket. Click any dish for full recipe instructions.</p>
+          </div>
+          <!-- Recipe Search -->
+          <div class="relative w-full sm:w-64">
+            <input 
+              type="text" 
+              id="recipe-search-input" 
+              oninput="filterRecipeCards(this.value)" 
+              placeholder="Search 15 recipes or ingredients..." 
+              class="w-full text-xs px-3.5 py-2 pl-9 rounded-full bg-white border border-brand-border text-brand-charcoal placeholder-brand-muted/70 focus:outline-none focus:ring-2 focus:ring-brand-terracotta/50"
+            >
+            <svg class="w-4 h-4 text-brand-muted absolute left-3 top-2.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path></svg>
+          </div>
+        </div>
+
+        <!-- Recipe Category Filter Tabs -->
+        <div class="flex items-center gap-2 overflow-x-auto pb-2 scrollbar-none mb-6">
+          <button 
+            id="recipe-filter-btn-all" 
+            onclick="setRecipeCategoryFilter('all')" 
+            class="recipe-cat-btn px-4 py-1.5 rounded-full text-xs font-semibold bg-brand-charcoal text-white transition shadow-xs whitespace-nowrap"
+          >
+            All Dishes (15)
+          </button>
+          <button 
+            id="recipe-filter-btn-core" 
+            onclick="setRecipeCategoryFilter('core')" 
+            class="recipe-cat-btn px-4 py-1.5 rounded-full text-xs font-semibold bg-white text-brand-charcoal border border-brand-border hover:bg-brand-sand transition whitespace-nowrap"
+          >
+            Core Repertoire (7)
+          </button>
+          <button 
+            id="recipe-filter-btn-pantry" 
+            onclick="setRecipeCategoryFilter('pantry')" 
+            class="recipe-cat-btn px-4 py-1.5 rounded-full text-xs font-semibold bg-white text-brand-charcoal border border-brand-border hover:bg-brand-sand transition whitespace-nowrap"
+          >
+            ⭐ New Pantry Additions (8)
+          </button>
+          <button 
+            id="recipe-filter-btn-skillet" 
+            onclick="setRecipeCategoryFilter('skillet')" 
+            class="recipe-cat-btn px-4 py-1.5 rounded-full text-xs font-semibold bg-white text-brand-charcoal border border-brand-border hover:bg-brand-sand transition whitespace-nowrap"
+          >
+            Quick Skillets (&lt;25m)
+          </button>
+          <button 
+            id="recipe-filter-btn-batch" 
+            onclick="setRecipeCategoryFilter('batch')" 
+            class="recipe-cat-btn px-4 py-1.5 rounded-full text-xs font-semibold bg-white text-brand-charcoal border border-brand-border hover:bg-brand-sand transition whitespace-nowrap"
+          >
+            Batch &amp; Oven Bakes
+          </button>
+        </div>
+
+        <div class="grid md:grid-cols-2 lg:grid-cols-3 gap-6" id="recipe-cards-grid">
+          <!-- Rendered dynamically via JS for all 15 recipes -->
+        </div>
+      </section>
+    </div>
+
+    <!-- ==================== TAB 2: SHOPPING LIST & IN-STORE TROLLEY ==================== -->
+    <div id="view-shopping" class="tab-view hidden space-y-6">
+      
+      <!-- Trolley Header Banner -->
+      <div class="bg-white p-5 sm:p-6 rounded-3xl border border-brand-border flex flex-col lg:flex-row items-start lg:items-center justify-between gap-4 shadow-xs">
+        <div class="space-y-1">
+          <div class="flex items-center gap-2">
+            <h2 class="font-serif text-2xl font-bold text-brand-charcoal">Checkers The Grove Mall Trolley</h2>
+            <!-- In-Store Mode Pill -->
+            <button 
+              id="toggle-trolley-mode-btn" 
+              onclick="toggleTrolleyMode()" 
+              class="px-3 py-1 rounded-full text-xs font-semibold border transition flex items-center gap-1.5 bg-brand-sand border-brand-border text-brand-charcoal hover:bg-brand-sandDark"
+              title="Switch to thumb-friendly, high-contrast supermarket walking mode"
+            >
+              <span>🛒 In-Store Mode</span>
+              <span id="trolley-mode-indicator" class="w-2 h-2 rounded-full bg-gray-400"></span>
+            </button>
+          </div>
+          <p class="text-xs text-brand-muted">Follows store progression at The Grove Mall (Entrance Produce → Centre Aisles → Butchery & Cold Chain).</p>
+          <div class="flex items-center gap-3 pt-1 text-xs">
+            <span id="trolley-status-count" class="text-brand-sage font-semibold">0 of 29 items in trolley</span>
+            <span class="text-brand-border">•</span>
+            <span id="active-phase-spend-summary" class="num-tabular font-medium text-brand-muted">Phase: R0.00 / R904.00</span>
+          </div>
+        </div>
+
+        <!-- Spend & Safety Actions -->
+        <div class="flex flex-col sm:flex-row items-start sm:items-center gap-4 w-full lg:w-auto justify-between lg:justify-end">
+          <div class="text-left sm:text-right">
+            <span class="text-[11px] text-brand-muted uppercase tracking-wider font-semibold block">Total Basket Spend:</span>
+            <span id="trolley-total-display" class="num-tabular text-2xl sm:text-3xl font-bold text-brand-terracotta">R0.00</span>
+          </div>
+          <!-- Actions -->
+          <div class="flex items-center gap-2">
+            <button onclick="checkAllVisible()" class="px-3.5 py-2 rounded-full text-xs font-semibold bg-brand-sand text-brand-charcoal hover:bg-brand-sandDark transition" title="Mark all items currently shown as checked">
+              ✓ Check Visible
+            </button>
+            <button onclick="requestClearChecks()" class="px-3.5 py-2 rounded-full text-xs font-semibold bg-white border border-brand-border text-brand-muted hover:text-brand-charcoal hover:border-brand-charcoal transition" title="Clear checked items with instant undo protection">
+              ✕ Clear Checks
+            </button>
+          </div>
+        </div>
+      </div>
+
+      <!-- Filters & Search Toolbar -->
+      <div class="flex flex-col sm:flex-row items-stretch sm:items-center justify-between gap-3">
+        <!-- Phase Filter Pills -->
+        <div class="flex items-center gap-1.5 overflow-x-auto pb-1 custom-scroll" role="tablist" aria-label="Shopping phase filters">
+          <button onclick="filterShoppingCategory('all', this)" class="shop-filter-btn active px-3.5 py-1.5 rounded-full text-xs font-semibold bg-brand-charcoal text-white transition whitespace-nowrap">All (29)</button>
+          <button onclick="filterShoppingCategory('haul1', this)" class="shop-filter-btn px-3.5 py-1.5 rounded-full text-xs font-semibold bg-brand-sand text-brand-charcoal hover:bg-brand-sandDark transition whitespace-nowrap">Bulk Haul 1 (~R904)</button>
+          <button onclick="filterShoppingCategory('week2', this)" class="shop-filter-btn px-3.5 py-1.5 rounded-full text-xs font-semibold bg-brand-sand text-brand-charcoal hover:bg-brand-sandDark transition whitespace-nowrap">Week 2 (~R185)</button>
+          <button onclick="filterShoppingCategory('week3', this)" class="shop-filter-btn px-3.5 py-1.5 rounded-full text-xs font-semibold bg-brand-sand text-brand-charcoal hover:bg-brand-sandDark transition whitespace-nowrap">Week 3 (~R244)</button>
+          <button onclick="filterShoppingCategory('week4', this)" class="shop-filter-btn px-3.5 py-1.5 rounded-full text-xs font-semibold bg-brand-sand text-brand-charcoal hover:bg-brand-sandDark transition whitespace-nowrap">Week 4 (~R143)</button>
+        </div>
+
+        <!-- Ingredient Search Input -->
+        <div class="relative w-full sm:w-56 flex-shrink-0">
+          <input 
+            type="text" 
+            id="shopping-search-input" 
+            oninput="handleShoppingSearch(this.value)" 
+            placeholder="Search items or aisles..." 
+            class="w-full text-xs px-3.5 py-1.5 pl-8 rounded-full bg-white border border-brand-border text-brand-charcoal placeholder-brand-muted/70 focus:outline-none focus:ring-2 focus:ring-brand-terracotta/50"
+          >
+          <svg class="w-3.5 h-3.5 text-brand-muted absolute left-2.5 top-2.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path></svg>
+        </div>
+      </div>
+
+      <!-- SHOPPING CARDS CONTAINER -->
+      <div class="grid md:grid-cols-2 gap-6" id="shopping-cards-container">
+        <!-- Injected via JS based on Aisle Flow -->
+      </div>
+
+      <!-- COLLAPSED TROLLEY DRAWER (In-Store Mode Sink) -->
+      <div id="trolley-sink-container" class="hidden">
+        <!-- Rendered dynamically when items are in trolley -->
+      </div>
+    </div>
+
+    <!-- ==================== TAB 3: 4-WEEK SCHEDULE ==================== -->
+    <div id="view-schedule" class="tab-view hidden space-y-6">
+      <div class="bg-white p-5 sm:p-6 rounded-3xl border border-brand-border">
+        <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-2">
+          <div>
+            <h2 class="font-serif text-2xl font-bold text-brand-charcoal">4-Week Rotating Dinner Calendar</h2>
+            <p class="text-xs text-brand-muted mt-0.5">Cook in batches on Sunday & Wednesday evenings; remaining weeknights are effortless 5-minute reheats.</p>
+          </div>
+          <span class="text-xs text-brand-terracotta font-semibold">Click any dinner to inspect full recipe</span>
+        </div>
+        
+        <!-- Week Selector Buttons (Defaults cleanly to Week 1) -->
+        <div class="grid grid-cols-2 sm:grid-cols-4 gap-2 mt-4" role="tablist">
+          <button onclick="selectCalendarWeek(1)" id="cal-btn-1" class="cal-btn active p-3 rounded-2xl border border-brand-terracotta text-center transition font-semibold text-xs bg-brand-terracotta text-white shadow-xs">Week 1: Curries & Roast</button>
+          <button onclick="selectCalendarWeek(2)" id="cal-btn-2" class="cal-btn p-3 rounded-2xl border border-brand-border text-center transition font-semibold text-xs bg-brand-sand text-brand-charcoal hover:bg-brand-sandDark">Week 2: Bakes & Skillets</button>
+          <button onclick="selectCalendarWeek(3)" id="cal-btn-3" class="cal-btn p-3 rounded-2xl border border-brand-border text-center transition font-semibold text-xs bg-brand-sand text-brand-charcoal hover:bg-brand-sandDark">Week 3: Mince Master</button>
+          <button onclick="selectCalendarWeek(4)" id="cal-btn-4" class="cal-btn p-3 rounded-2xl border border-brand-border text-center transition font-semibold text-xs bg-brand-sand text-brand-charcoal hover:bg-brand-sandDark">Week 4: End-of-Month</button>
+        </div>
+      </div>
+
+      <!-- Calendar Schedule Table Container -->
+      <div id="calendar-table-container" class="bg-white rounded-3xl border border-brand-border overflow-hidden shadow-xs">
+        <!-- Injected via JS -->
+      </div>
+
+      <!-- Calendar Pantry Swap Banner -->
+      <div class="p-4 sm:p-5 rounded-3xl bg-brand-sand/50 border border-brand-border flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3">
+        <div class="space-y-0.5">
+          <span class="text-[11px] uppercase tracking-wider font-bold text-brand-terracotta">Flexible Dinner Swaps</span>
+          <p class="text-xs text-brand-muted">Want to switch any scheduled dinner? You have 8 additional pantry creations (like Chakalaka Shakshuka, Tuna &amp; Potato Fish Cakes, Cape Bobotie, or Crispy Cabbage Fritters) in the Recipes tab made with these exact ingredients.</p>
+        </div>
+        <button onclick="switchTab('recipes'); setRecipeCategoryFilter('pantry');" class="px-4 py-2 rounded-full bg-brand-charcoal text-white hover:bg-black text-xs font-semibold whitespace-nowrap transition shadow-xs">
+          Explore 8 Pantry Swaps →
+        </button>
+      </div>
+    </div>
+
+    <!-- ==================== TAB 4: 90-MIN PREP GUIDE ==================== -->
+    <div id="view-prep" class="tab-view hidden space-y-6">
+      <div class="bg-white p-6 sm:p-8 rounded-3xl border border-brand-border">
+        <div class="max-w-2xl">
+          <span class="inline-flex items-center gap-1.5 px-3 py-0.5 rounded-full bg-brand-terracotta/10 text-brand-terracotta text-xs font-semibold uppercase tracking-wider mb-2">
+            Sunday Kitchen Blueprint
+          </span>
+          <h2 class="font-serif text-2xl sm:text-3xl font-bold text-brand-charcoal">
+            The 90-Minute Sunday Parallel Cook
+          </h2>
+          <p class="text-xs sm:text-sm text-brand-muted mt-1 leading-relaxed">
+            How to cook the week's staples simultaneously on Sunday afternoon. You only wash pans once, and delicious pre-made dinners wait in the fridge all week long.
+          </p>
+        </div>
+
+        <div class="mt-6 space-y-3.5">
+          <!-- Timeline Block 1 -->
+          <div class="flex flex-col sm:flex-row gap-4 p-4 rounded-2xl bg-brand-sand/40 border border-brand-border">
+            <div class="sm:w-36 flex-shrink-0">
+              <span class="num-tabular text-xs font-bold text-brand-terracotta uppercase">00:00 – 00:15</span>
+              <span class="block text-[11px] text-brand-muted font-medium">Prep & Par-Boil</span>
+            </div>
+            <div class="text-xs space-y-1">
+              <strong class="text-brand-charcoal text-sm block">1. Boil Lentils & Shred Roots</strong>
+              <p class="text-brand-muted leading-relaxed">
+                Rinse 1 cup brown lentils and place on back burner in salted water (18 mins simmer). Meanwhile, grate 2 carrots, dice 2 brown onions, and peel 5 potatoes for mash.
+              </p>
+            </div>
+          </div>
+
+          <!-- Timeline Block 2 -->
+          <div class="flex flex-col sm:flex-row gap-4 p-4 rounded-2xl bg-brand-sand/40 border border-brand-border">
+            <div class="sm:w-36 flex-shrink-0">
+              <span class="num-tabular text-xs font-bold text-brand-terracotta uppercase">00:15 – 00:45</span>
+              <span class="block text-[11px] text-brand-muted font-medium">Active Sauté</span>
+            </div>
+            <div class="text-xs space-y-1">
+              <strong class="text-brand-charcoal text-sm block">2. Brown Mince & Build Savoury Ragù</strong>
+              <p class="text-brand-muted leading-relaxed">
+                In a large deep pan, brown 500g lean mince in sunflower oil. Remove meat, fry onions and grated carrots. Stir in the drained lentils, canned tomatoes, 2 cups stock, and herbs. Simmer gently for 25 mins.
+              </p>
+            </div>
+          </div>
+
+          <!-- Timeline Block 3 -->
+          <div class="flex flex-col sm:flex-row gap-4 p-4 rounded-2xl bg-brand-sand/40 border border-brand-border">
+            <div class="sm:w-36 flex-shrink-0">
+              <span class="num-tabular text-xs font-bold text-brand-terracotta uppercase">00:45 – 01:05</span>
+              <span class="block text-[11px] text-brand-muted font-medium">Carb Foundations</span>
+            </div>
+            <div class="text-xs space-y-1">
+              <strong class="text-brand-charcoal text-sm block">3. Fluffy Mashed Potatoes & Extra Rice</strong>
+              <p class="text-brand-muted leading-relaxed">
+                Boil potatoes until fork-tender, mash with 1/4 cup milk and butter. In a second pot, cook 2 extra cups of white rice to chill in the fridge (dries surface starch for crisp fried rice later).
+              </p>
+            </div>
+          </div>
+
+          <!-- Timeline Block 4 -->
+          <div class="flex flex-col sm:flex-row gap-4 p-4 rounded-2xl bg-brand-sand/40 border border-brand-border">
+            <div class="sm:w-36 flex-shrink-0">
+              <span class="num-tabular text-xs font-bold text-brand-terracotta uppercase">01:05 – 01:20</span>
+              <span class="block text-[11px] text-brand-muted font-medium">Assembly Line</span>
+            </div>
+            <div class="text-xs space-y-1">
+              <strong class="text-brand-charcoal text-sm block">4. Assemble Cottage Pie & Portion Containers</strong>
+              <p class="text-brand-muted leading-relaxed">
+                Ladle 2 cups of savoury mince into a baking dish, spread mashed potatoes on top, score with a fork, and top with grated cheddar. Cover with foil for Wednesday's dinner.
+              </p>
+            </div>
+          </div>
+
+          <!-- Timeline Block 5 -->
+          <div class="flex flex-col sm:flex-row gap-4 p-4 rounded-2xl bg-brand-sand/40 border border-brand-border">
+            <div class="sm:w-36 flex-shrink-0">
+              <span class="num-tabular text-xs font-bold text-brand-terracotta uppercase">01:20 – 01:30</span>
+              <span class="block text-[11px] text-brand-muted font-medium">Kitchen Close</span>
+            </div>
+            <div class="text-xs space-y-1">
+              <strong class="text-brand-charcoal text-sm block">5. Sink Wash & Fridge Stock</strong>
+              <p class="text-brand-muted leading-relaxed">
+                Wash the two pans. Monday dinner (Bolognese) is ready to eat, Tuesday lunch is packed, Wednesday Cottage Pie is prepped, and Friday fried rice base is chilled!
+              </p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+  </main>
+
+  <!-- ACCESSIBLE RECIPE DETAIL MODAL DIALOG -->
+  <div 
+    id="recipe-modal" 
+    class="fixed inset-0 z-50 hidden flex items-center justify-center p-4 sm:p-6 bg-black/60 backdrop-blur-sm" 
+    role="dialog" 
+    aria-modal="true" 
+    aria-labelledby="modal-title"
+    onclick="handleModalBackdropClick(event)"
+  >
+    <div class="bg-white rounded-3xl border border-brand-border w-full max-w-3xl max-h-[90vh] flex flex-col shadow-2xl overflow-hidden relative" onclick="event.stopPropagation()">
+      
+      <!-- Modal Header Bar -->
+      <div class="p-5 sm:p-6 border-b border-brand-border flex items-start justify-between bg-brand-sand/30">
+        <div>
+          <span id="modal-tag" class="text-[11px] uppercase tracking-wider font-bold text-brand-terracotta block"></span>
+          <h3 id="modal-title" class="font-serif text-2xl sm:text-3xl font-bold text-brand-charcoal mt-0.5"></h3>
+          <div class="flex flex-wrap items-center gap-2 sm:gap-3 mt-2 text-xs text-brand-muted font-medium">
+            <span id="modal-cost" class="num-tabular bg-brand-sageLight text-brand-sage px-2.5 py-0.5 rounded-full font-bold"></span>
+            <span id="modal-time"></span>
+            <span>•</span>
+            <span id="modal-yield"></span>
+          </div>
+        </div>
+        <button onclick="closeRecipeModal()" class="w-9 h-9 rounded-full bg-white border border-brand-border text-brand-charcoal hover:bg-brand-sand transition flex items-center justify-center font-bold text-sm" aria-label="Close recipe modal">
+          ✕
+        </button>
+      </div>
+
+      <!-- Modal Body (Scrollable) -->
+      <div class="p-5 sm:p-6 overflow-y-auto custom-scroll space-y-6 text-xs text-brand-charcoal leading-relaxed">
+        
+        <!-- Recipe Description -->
+        <p id="modal-desc" class="text-sm text-brand-muted leading-relaxed"></p>
+
+        <!-- Two Columns: Ingredients + Instructions -->
+        <div class="grid md:grid-cols-12 gap-6 items-start">
+          
+          <!-- Ingredients Column -->
+          <div class="md:col-span-5 bg-brand-sand/40 p-4 sm:p-5 rounded-2xl border border-brand-border space-y-3">
+            <h4 class="font-serif font-bold text-sm text-brand-charcoal border-b border-brand-border pb-1.5 flex items-center justify-between">
+              <span>Ingredients (Checkers Basket)</span>
+            </h4>
+            <ul id="modal-ingredients" class="space-y-2 text-xs text-brand-charcoal">
+              <!-- Injected via JS -->
+            </ul>
+          </div>
+
+          <!-- Cooking Steps -->
+          <div class="md:col-span-7 space-y-3">
+            <h4 class="font-serif font-bold text-sm text-brand-charcoal border-b border-brand-border pb-1.5">
+              Step-by-Step Instructions
+            </h4>
+            <ol id="modal-steps" class="space-y-3 text-xs text-brand-charcoal list-decimal list-inside leading-relaxed">
+              <!-- Injected via JS -->
+            </ol>
+          </div>
+        </div>
+
+        <!-- Stretch & Storage Advice -->
+        <div class="p-4 rounded-2xl bg-brand-sageLight/50 border border-brand-sage/30 space-y-1">
+          <h5 class="font-serif font-bold text-xs text-brand-sage flex items-center gap-1.5">
+            <span>💡 Stretch & Food Storage Secrets</span>
+          </h5>
+          <p id="modal-stretch" class="text-xs text-brand-charcoal leading-relaxed"></p>
+        </div>
+
+        <!-- Date Night Plating Advice -->
+        <div class="p-4 rounded-2xl bg-brand-terracotta/5 border border-brand-terracotta/20 space-y-1">
+          <h5 class="font-serif font-bold text-xs text-brand-terracotta flex items-center gap-1.5">
+            <span>✨ Serving & Plating Tip</span>
+          </h5>
+          <p id="modal-plating" class="text-xs text-brand-charcoal leading-relaxed"></p>
+        </div>
+
+      </div>
+
+      <!-- Modal Footer -->
+      <div class="p-4 bg-brand-sand/20 border-t border-brand-border flex items-center justify-between">
+        <button onclick="closeRecipeModal()" class="px-5 py-2 rounded-full text-xs font-semibold bg-brand-sand text-brand-charcoal hover:bg-brand-sandDark transition">
+          Close
+        </button>
+        <button onclick="switchTab('shopping'); closeRecipeModal();" class="px-5 py-2 rounded-full text-xs font-semibold bg-brand-terracotta text-white hover:bg-brand-terracottaHover transition">
+          Inspect Shopping Trolley →
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- STICKY IN-STORE TROLLEY STATUS BAR (Appears in Trolley Mode on Mobile) -->
+  <aside id="trolley-sticky-bar" class="no-print hidden fixed bottom-4 left-4 right-4 z-40 bg-brand-charcoal text-white p-3.5 rounded-2xl shadow-xl border border-white/20 flex items-center justify-between">
+    <div>
+      <span id="trolley-bar-status" class="num-tabular font-bold text-sm block">0 / 29 Items</span>
+      <span id="trolley-bar-spend" class="num-tabular text-xs text-brand-terracotta font-semibold">R0.00 spent</span>
+    </div>
+    <div class="flex items-center gap-2">
+      <button onclick="window.scrollTo({top: 0, behavior: 'smooth'})" class="px-3 py-1.5 rounded-xl bg-white/10 hover:bg-white/20 text-xs font-medium text-white transition">
+        Top ↑
+      </button>
+      <button onclick="toggleTrolleyMode()" class="px-3 py-1.5 rounded-xl bg-brand-terracotta hover:bg-brand-terracottaHover text-xs font-bold text-white transition">
+        Exit In-Store Mode
+      </button>
+    </div>
+  </aside>
+
+  <!-- STICKY UNDO TOAST NOTIFICATION -->
+  <div 
+    id="toast-undo" 
+    class="no-print fixed bottom-6 left-1/2 -translate-x-1/2 z-50 hidden bg-brand-charcoal text-white px-5 py-3 rounded-2xl shadow-2xl border border-white/20 flex items-center gap-4 transition-all duration-300"
+    role="status"
+    aria-live="polite"
+  >
+    <div class="flex items-center gap-2 text-xs">
+      <svg class="w-4 h-4 text-brand-terracotta" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"></path></svg>
+      <span id="toast-undo-message">All items cleared from trolley.</span>
+    </div>
+    <div class="flex items-center gap-2">
+      <button onclick="executeUndoChecks()" class="px-3 py-1 rounded-lg bg-brand-terracotta hover:bg-brand-terracottaHover text-white text-xs font-bold transition">
+        UNDO
+      </button>
+      <button onclick="dismissUndoToast()" class="text-white/60 hover:text-white text-xs p-1" aria-label="Dismiss toast">
+        ✕
+      </button>
+    </div>
+  </div>
+
+  <!-- FOOTER -->
+  <footer class="no-print border-t border-brand-border bg-white mt-auto py-8">
+    <div class="max-w-6xl mx-auto px-4 sm:px-6 flex flex-col sm:flex-row items-center justify-between gap-4 text-xs text-brand-muted">
+      <div>
+        <p class="font-serif font-bold text-brand-charcoal text-sm">Pantry & Table • The Grove Mall Edition</p>
+        <p class="mt-0.5">Budgeted for Checkers Willow Park Manor, Pretoria East</p>
+      </div>
+      <div class="flex items-center gap-4">
+        <button onclick="window.print()" class="hover:text-brand-charcoal font-semibold">Print Shopping List</button>
+        <span>•</span>
+        <button onclick="window.scrollTo({top:0, behavior:'smooth'})" class="hover:text-brand-charcoal">Back to Top ↑</button>
+      </div>
+    </div>
+  </footer>
+
+  <!-- SCRIPT ENGINE -->
+  <script>
+    // --- RECIPES DATABASE (15 DISHES: 7 CORE + 8 PANTRY CREATIONS) ---
+    const RECIPES = {
+      'mince': {
+        id: 'mince',
+        category: 'core',
+        isSkillet: false,
+        isBatch: true,
+        title: 'Lentil-Stretched Mince Savoury Sauce',
+        tag: 'Master Technique • Week 3',
+        image: 'https://images.unsplash.com/photo-1551183053-bf91a1d81141?auto=format&fit=crop&w=800&q=80',
+        cost: '~R18.50 / portion',
+        time: '45 mins total',
+        yield: '6–8 rich portions',
+        desc: 'The ultimate budget anchor: blending 500g of browned beef or chicken mince with par-cooked brown lentils and finely grated carrots. The lentils absorb every drop of pan drippings and stock, doubling the yield into a rich, glossy ragù.',
+        ingredients: [
+          '500g Checkers bulk lean beef or chicken mince (half of 1kg pack)',
+          '1 cup (approx. 200g) dry brown lentils, rinsed',
+          '1 large brown onion, finely diced',
+          '2 medium carrots, finely grated (melts invisibly into sauce)',
+          '2 cloves garlic, minced (or 1 tsp garlic powder)',
+          '1 can (410g) chopped peeled tomatoes',
+          '2 tbsp tomato paste (or Worcestershire sauce / soy sauce)',
+          '2 cups beef stock (1 cube dissolved in 500ml hot water)',
+          '1 tsp mixed dried herbs & 1 tsp smoked paprika',
+          '2 tbsp Checkers sunflower oil, salt & coarse black pepper'
+        ],
+        steps: [
+          'Par-Cook Lentils: Simmer 1 cup brown lentils in 3 cups salted water for 15–18 minutes until tender-firm (not mushy). Drain well and set aside.',
+          'Brown the Meat: Heat 1 tbsp oil in a large deep skillet or saucepan over medium-high heat. Brown 500g mince until moisture evaporates and meat caramelizes (6–8 mins). Transfer meat to a bowl.',
+          'Sauté Aromatics: Add remaining oil to the pan. Sauté diced onions for 4 mins until soft. Stir in grated carrots and minced garlic; cook for 3 mins until the carrots soften and release sweetness.',
+          'Combine Spices & Bases: Return the browned mince to the pan. Stir in the drained lentils, tomato paste, mixed herbs, paprika, and salt/pepper for 1 minute to toast the aromatics.',
+          'Simmer Sauce: Pour in canned tomatoes and hot beef stock. Bring to a boil, then turn heat to low, cover slightly ajar, and simmer for 25–30 minutes until thick, glossy, and melded.'
+        ],
+        stretchTips: 'Freeze half the sauce immediately in portion containers for up to 2 months. Reheat over pasta, baked jacket potatoes, or stiff stywepap. Remember to freeze the raw 500g mince portion from your 1kg Checkers pack for next month!',
+        platingTips: 'For a cozy date-night meal, ladle generously over al dente spaghetti, dust with freshly grated cheddar, and serve with toasted bread to mop up the rich savoury sauce.'
+      },
+      'lentil-stew': {
+        id: 'lentil-stew',
+        category: 'core',
+        isSkillet: false,
+        isBatch: true,
+        title: 'Curried Lentil & Root Vegetable Stew',
+        tag: 'Batch Favorite • Week 1 & 4',
+        image: 'https://images.unsplash.com/photo-1546833999-b9f581a1996d?auto=format&fit=crop&w=800&q=80',
+        cost: '~R12.50 / portion',
+        time: '40 mins cook',
+        yield: '6 hearty portions',
+        desc: 'A soul-warming, fragrant curry stew powered by dry brown lentils, potatoes, and sweet carrots simmered in Rajah curry and chopped tomatoes. Deeply satisfying, high in fiber, and costs virtually nothing per serving.',
+        ingredients: [
+          '1.5 cups Checkers dry brown lentils, rinsed',
+          '3 medium potatoes, peeled and cubed into bite-sized pieces',
+          '2 large carrots, peeled and sliced into thick coins',
+          '1 large brown onion, diced',
+          '1 can (410g) Checkers chopped peeled tomatoes',
+          '2 tbsp Rajah mild or medium curry powder',
+          '3 cups vegetable or beef stock',
+          '2 tbsp Checkers sunflower oil, salt & pepper to taste'
+        ],
+        steps: [
+          'Aromatics: Heat 2 tbsp oil in a large pot over medium heat. Fry diced onions until soft and golden (4–5 mins).',
+          'Bloom Spices: Stir in 2 tbsp curry powder and cook gently for 60 seconds until fragrant and sizzling.',
+          'Add Roots & Lentils: Add rinsed brown lentils, diced potatoes, and sliced carrots, tossing well in the spiced oil.',
+          'Simmer: Pour in the canned tomatoes and 3 cups of stock. Bring to a boil, then reduce heat to low, cover, and simmer for 35 minutes until potatoes are fork-tender and lentils are velvety.',
+          'Finish: Season with salt and black pepper. Stir vigorously to crush a few potato cubes—this naturally thickens the curry gravy.'
+        ],
+        stretchTips: 'Keeps in the fridge for up to 5 days and actually tastes even richer on day 2 and 3. Enjoy half on Monday over rice, and eat Tuesday night spooned over hot stiff pap (stywepap) or toasted bread.',
+        platingTips: 'Serve in deep ceramic bowls over steaming parboiled rice, garnished with a sprinkle of fresh black pepper and warm buttered toast.'
+      },
+      'chicken-wedges': {
+        id: 'chicken-wedges',
+        category: 'core',
+        isSkillet: false,
+        isBatch: true,
+        title: 'Sheet-Pan Chicken Pieces & Crispy Wedges',
+        tag: 'Hands-Off Oven • Week 1 & 2',
+        image: 'https://images.unsplash.com/photo-1598515214211-89d3c73ae83b?auto=format&fit=crop&w=800&q=80',
+        cost: '~R21.00 / portion',
+        time: '50 mins oven',
+        yield: '4–6 portions',
+        desc: 'Zero stovetop splatter: Farmer’s Choice mixed chicken portions roasted alongside thick potato wedges, caramelized carrots, and onion petals. The savory chicken drippings roast the root veggies into golden perfection.',
+        ingredients: [
+          '~1.5–2 kg Farmer’s Choice mixed chicken portions (thighs & drumsticks)',
+          '5 medium potatoes, unpeeled and cut into wedges',
+          '3 large carrots, cut into chunky batons',
+          '2 brown onions, cut into 6 wedges each',
+          '3 tbsp Checkers sunflower oil',
+          '2 tbsp Chicken spice or Six-Gun BBQ grill spice',
+          '1 tsp garlic powder, coarse salt & black pepper'
+        ],
+        steps: [
+          'Preheat & Prep: Preheat your oven to 200°C. Lightly oil a large oven roasting pan or sheet pan.',
+          'Season Veggies: Scatter the potato wedges, carrot batons, and onion wedges onto the pan. Drizzle with 1.5 tbsp oil, 1 tbsp chicken spice, and toss until coated.',
+          'Season Chicken: Pat chicken portions dry with kitchen paper. Rub with remaining oil, chicken spice, and garlic powder.',
+          'Arrange & Roast: Nestle the chicken pieces evenly between the vegetables. Roast uncovered at 200°C for 45–50 minutes until chicken skin is crackling golden and juices run clear.',
+          'Rest: Allow chicken to rest for 5 minutes before serving so the meat reabsorbs its savory juices.'
+        ],
+        stretchTips: 'Shred any leftover chicken meat off the bones and save in a container with the leftover wedges. Reheat in a dry skillet on Thursday or fold into Friday’s egg fried rice!',
+        platingTips: 'Serve straight on a wooden board or family platter. The sweet, caramelized roasted onion wedges taste incredible paired with the crispy spiced chicken skin.'
+      },
+      'cabbage-sausage': {
+        id: 'cabbage-sausage',
+        category: 'core',
+        isSkillet: true,
+        isBatch: false,
+        title: 'Cabbage & Smoked Russian Sausage Sauté',
+        tag: '15-Minute Skillet • Week 2 & 4',
+        image: 'https://images.unsplash.com/photo-1540420773420-3366772f4999?auto=format&fit=crop&w=800&q=80',
+        cost: '~R14.00 / portion',
+        time: '15 mins skillet',
+        yield: '4 generous portions',
+        desc: 'A lightning-fast, high-flavor weeknight miracle. Crisp browned smoked Russian sausage coins tossed with thinly shredded sweet cabbage, soft onions, coarse black pepper, and soy sauce.',
+        ingredients: [
+          '1/2 head large green cabbage, finely shredded (approx. 4–5 cups)',
+          '500g Eskort or Checkers smoked Russian sausages, sliced into 1cm coins',
+          '1 large brown onion, halved and thinly sliced',
+          '2 tbsp Checkers sunflower oil',
+          '1.5 tbsp soy sauce',
+          '1 tsp coarse black pepper & 1/2 tsp garlic powder'
+        ],
+        steps: [
+          'Brown Sausages: Heat 1 tbsp oil in a large deep frying pan or wok over high heat. Fry sausage coins for 3–4 minutes until blistered and browned on both sides. Remove to a side plate.',
+          'Fry Onions: Add remaining oil and sliced onions to the pan. Sauté for 2 minutes until translucent and picking up sausage drippings.',
+          'Wilt Cabbage: Toss in the shredded cabbage. Stir-fry constantly on high heat for 4–5 minutes. You want the cabbage tender-crisp, not soggy.',
+          'Season & Glaze: Return the sausage coins to the pan. Splash with soy sauce, coarse black pepper, and garlic powder. Toss vigorously for 1 minute to glaze everything evenly.',
+          'Serve Immediately: Remove from heat while cabbage retains a light crunch.'
+        ],
+        stretchTips: 'Cabbage triples in volume when shredded. Any leftovers make an incredible warm lunch the next day spooned over freshly whipped maize meal (pap) or toasted bread.',
+        platingTips: 'Pile high into wide dinner bowls over fluffy white parboiled rice. The smoky sausage fat glazes the sweet cabbage and seasons the rice beneath.'
+      },
+      'tuna-pasta': {
+        id: 'tuna-pasta',
+        category: 'core',
+        isSkillet: false,
+        isBatch: true,
+        title: 'Cheesy Tuna & Sweetcorn Pasta Bake',
+        tag: 'Oven Comfort • Week 2 & 4',
+        image: 'https://images.unsplash.com/photo-1645453014403-4ad5170a386c?auto=format&fit=crop&w=800&q=80',
+        cost: '~R16.50 / portion',
+        time: '35 mins total',
+        yield: '5–6 portions',
+        desc: 'Pure golden comfort: macaroni folded with Checkers shredded tuna, juicy sweetcorn, and a quick homemade cheese béchamel sauce, finished with a melted cheddar crust.',
+        ingredients: [
+          '350g Checkers macaroni or spaghetti',
+          '2 cans (170g each) Checkers shredded tuna in brine, drained',
+          '1 can (410g) whole kernel sweetcorn, drained',
+          '1 small brown onion, finely minced',
+          '2 tbsp Checkers sunflower oil or butter',
+          '2 tbsp cake flour',
+          '2 cups full-cream milk (or 1 cup milk + 1 cup salted pasta cooking water)',
+          '150g Checkers cheddar cheese, freshly grated',
+          '1 tsp dried mixed herbs, salt & black pepper'
+        ],
+        steps: [
+          'Boil Pasta: Cook macaroni in boiling salted water for 8–9 minutes until al dente. Drain, reserving 1 cup of pasta water.',
+          'Make White Sauce: In a pot, cook minced onion in 2 tbsp oil/butter for 3 mins. Stir in 2 tbsp flour for 60 seconds. Gradually whisk in 2 cups milk until smooth. Simmer for 2 minutes until thickened.',
+          'Fold In Goodies: Remove sauce from heat. Stir in half the grated cheese, drained tuna, sweetcorn, mixed herbs, salt, and pepper.',
+          'Assemble: Combine cooked macaroni with the creamy sauce and transfer into a baking dish. Scatter the remaining cheddar evenly across the top.',
+          'Bake: Bake at 190°C for 18–20 minutes until the top is bubbling and crusted in melted golden cheese.'
+        ],
+        stretchTips: 'Tuna bakes hold their shape wonderfully in the fridge for up to 4 days. Reheat individual slices in the microwave with a tiny splash of milk or in the oven for a crispy crust.',
+        platingTips: 'Pair with fresh sliced tomato drizzled with a pinch of coarse salt and cracked black pepper to cut through the rich, cheesy bake.'
+      },
+      'chakalaka-samp': {
+        id: 'chakalaka-samp',
+        category: 'core',
+        isSkillet: false,
+        isBatch: true,
+        title: 'Creamy Chakalaka & Bean Samp',
+        tag: 'Soul Food Classic • Week 1 & 3',
+        image: 'https://images.unsplash.com/photo-1512621776951-a57141f2eefd?auto=format&fit=crop&w=800&q=80',
+        cost: '~R11.00 / portion',
+        time: '60 mins simmer',
+        yield: '6 dense portions',
+        desc: 'Traditional South African comfort at its best: slow-simmered Champion samp and sugar beans folded into spicy Checkers chakalaka and caramelized onions, crowned with a fried egg.',
+        ingredients: [
+          '2 cups Champion samp & sugar beans mix (rinsed and soaked in water)',
+          '1 can (410g) Checkers Housebrand mild or hot chakalaka',
+          '1 large brown onion, diced',
+          '2 tbsp Checkers sunflower oil',
+          '1 beef or vegetable stock cube dissolved in 1 cup warm water',
+          '4–6 Checkers large eggs (1 per serving for protein)',
+          'Salt and coarse black pepper'
+        ],
+        steps: [
+          'Simmer Samp & Beans: Place soaked samp and beans in a heavy-bottomed pot with 5 cups of water and 1 tsp salt. Simmer covered on medium-low heat for 60–70 minutes until tender and creamy.',
+          'Sauté Chakalaka Base: In a small frying pan, cook diced onions in 1 tbsp oil until golden brown. Pour in the can of chakalaka and stock; heat through for 3 minutes.',
+          'Fold & Meld: Spoon the warm chakalaka mixture directly into the cooked samp pot. Stir thoroughly and simmer gently for another 5 minutes to let the flavours marry.',
+          'Fry Eggs: Just before serving, fry eggs sunny-side up in a little oil until whites are crisp and yolks stay runny.',
+          'Assemble: Ladle steaming chakalaka samp into bowls and top each with a sunny-side egg.'
+        ],
+        stretchTips: 'Samp and beans are the highest calorie-and-protein-per-rand staple in the entire grocery haul. Leftovers keep for 5 days and freeze effortlessly.',
+        platingTips: 'Serve piping hot in deep earthenware bowls. Breaking the soft yolk into the spicy chakalaka creates a luxurious, creamy sauce with zero extra expense.'
+      },
+      'fried-rice': {
+        id: 'fried-rice',
+        category: 'core',
+        isSkillet: true,
+        isBatch: false,
+        title: 'Egg & Country-Crop Veg Fried Rice',
+        tag: 'Zero-Waste Friday • All Weeks',
+        image: 'https://images.unsplash.com/photo-1603133872878-684f208fb84b?auto=format&fit=crop&w=800&q=80',
+        cost: '~R9.50 / portion',
+        time: '12 mins wok',
+        yield: '3–4 portions',
+        desc: 'Friday night takeout quality at home: cold day-old parboiled rice fried in a smoking-hot skillet with scrambled eggs, soy sauce, garlic, and sweet frozen peas, corn, and carrots.',
+        ingredients: [
+          '3–4 cups day-old cold parboiled rice (from fridge)',
+          '3 Checkers large eggs, lightly beaten with a pinch of salt',
+          '1.5 cups Checkers frozen country-crop mix (peas, corn, carrots)',
+          '1 small brown onion, finely diced',
+          '2 cloves garlic, minced',
+          '2.5 tbsp Checkers sunflower oil',
+          '2 tbsp soy sauce & 1/2 tsp coarse black pepper'
+        ],
+        steps: [
+          'Scramble Eggs: Heat 1 tbsp oil in a large skillet or wok over medium heat. Pour in beaten eggs, scramble softly for 60 seconds, and tip onto a plate.',
+          'Blister Vegetables: Turn heat to high. Add 1.5 tbsp oil, then toss in diced onions, minced garlic, and frozen mixed veg. Stir-fry for 2–3 minutes until veggies are hot and tender.',
+          'Add Cold Rice: Add chilled rice into the skillet, breaking up any clumps with a wooden spoon or spatula. Toss continuously over high heat for 2 minutes.',
+          'Season: Drizzle soy sauce and black pepper evenly over the rice. Keep tossing until every grain is lightly glazed and sizzling.',
+          'Fold Eggs: Turn off heat, fold the scrambled eggs back in, and serve immediately.'
+        ],
+        stretchTips: 'The secret is chilled rice! Freshly cooked hot rice becomes mushy in a frying pan. If you have any leftover chicken from Wednesday, shred it directly into the wok for a protein boost.',
+        platingTips: 'Serve in wide noodle bowls with an extra drizzle of soy sauce or hot chili flakes. Friday dinner done in under 15 minutes!'
+      },
+      'shakshuka': {
+        id: 'shakshuka',
+        title: 'Chakalaka & Tomato Shakshuka with Toast',
+        category: 'pantry',
+        isSkillet: true,
+        isBatch: false,
+        tag: '15-Min Skillet • Weeknight & Brunch',
+        image: 'https://images.unsplash.com/photo-1590412200988-a436970781fa?auto=format&fit=crop&w=800&q=80',
+        cost: '~R11.50 / portion',
+        time: '15 mins skillet',
+        yield: '3–4 portions',
+        desc: 'A South African twist on the Mediterranean classic: whole eggs poached gently in a bubbling, spiced pan of canned peeled tomatoes, chakalaka, and caramelized onions, served with thick dipping toast.',
+        ingredients: [
+          '1 can (410g) Checkers chopped peeled tomatoes',
+          '3–4 tbsp Checkers mild or hot chakalaka',
+          '1 large brown onion, finely diced',
+          '2 cloves garlic, minced (or 1/2 tsp garlic powder)',
+          '4 Checkers large eggs',
+          '4 thick slices bread, toasted',
+          '1.5 tbsp Checkers sunflower oil, salt & coarse black pepper'
+        ],
+        steps: [
+          'Sauté Aromatics: Heat oil in a wide skillet over medium heat. Fry diced onions and minced garlic for 4 minutes until golden and tender.',
+          'Build Sauce: Pour in the canned chopped tomatoes and chakalaka. Season with a pinch of salt and black pepper. Simmer on medium-low for 5–6 minutes until thick and glossy.',
+          'Poach Eggs: Use the back of a spoon to make 4 small nests in the bubbling sauce. Crack each egg directly into a hollow. Cover the pan with a lid.',
+          'Simmer: Cook on low for 4–5 minutes until egg whites are opaque and set but yolks stay delightfully runny.',
+          'Serve: Remove lid, dust with cracked black pepper, and serve immediately straight from the pan with hot buttered toast for dipping.'
+        ],
+        stretchTips: 'Zero meat needed! If you have any leftover Russian sausage coins from earlier in the week, crisp them in the pan before adding the onions for extra smokiness.',
+        platingTips: 'Bring the rustic skillet straight to the table on a heatproof mat. Mop up the spicy tomato-chakalaka sauce and golden runny yolk with toasted bread.'
+      },
+      'tuna-cakes': {
+        id: 'tuna-cakes',
+        title: 'Crispy Tuna & Potato Fish Cakes',
+        category: 'pantry',
+        isSkillet: true,
+        isBatch: true,
+        tag: 'Pantry Transformation • Batchable',
+        image: 'https://images.unsplash.com/photo-1589302168068-964664d93dc0?auto=format&fit=crop&w=800&q=80',
+        cost: '~R14.50 / portion',
+        time: '30 mins total',
+        yield: '6–8 golden patties',
+        desc: 'Transforms humble canned tuna and pantry potatoes into crispy golden patties with savoury sautéed onions, herbs, and black pepper. Delicious hot with rice or tucked into toast.',
+        ingredients: [
+          '2 cans (170g each) Checkers shredded tuna in brine, thoroughly drained',
+          '4 medium potatoes, peeled, boiled, and mashed smoothly',
+          '1 small brown onion, finely minced and sautéed soft',
+          '1 Checkers large egg, beaten (to bind)',
+          '2 tbsp maize meal or flour (for binding and light dusting)',
+          '1 tsp garlic powder, 1 tsp mixed herbs, salt & black pepper',
+          '3 tbsp Checkers sunflower oil for shallow frying'
+        ],
+        steps: [
+          'Boil & Mash: Boil peeled potato chunks in salted water for 15 mins until tender. Drain thoroughly and mash until smooth. Let cool slightly.',
+          'Combine Mix: Fold the drained tuna, sautéed onion, beaten egg, herbs, garlic powder, salt, and pepper into the mashed potato. Mix until evenly incorporated.',
+          'Shape Patties: Divide into 6–8 balls and flatten into 1.5 cm thick patties. Lightly dust both sides with a whisper of maize meal or flour.',
+          'Fry Golden: Heat oil in a wide frying pan over medium-high heat. Fry patties for 3–4 minutes per side without crowding until deeply golden and crusty.',
+          'Drain & Rest: Transfer to kitchen paper for 1 minute before serving.'
+        ],
+        stretchTips: 'These hold together superbly and keep in an airtight container in the fridge for 3 days, or can be frozen between sheets of baking paper.',
+        platingTips: 'Serve hot with a side of crunchy shredded cabbage slaw or tuck two patties into toasted sliced bread with a spoonful of chakalaka.'
+      },
+      'bobotie': {
+        id: 'bobotie',
+        title: 'Cape-Style Mince & Lentil Bobotie with Yellow Rice',
+        category: 'pantry',
+        isSkillet: false,
+        isBatch: true,
+        tag: 'Heritage Comfort • Oven Bake',
+        image: 'https://images.unsplash.com/photo-1544025162-d76694265947?auto=format&fit=crop&w=800&q=80',
+        cost: '~R19.00 / portion',
+        time: '40 mins bake',
+        yield: '6 hearty portions',
+        desc: 'A South African family classic reimagined for budget excellence: lean mince stretched 1:1 with cooked brown lentils and grated carrots in a fragrant curry gravy, topped with a velvety baked egg-and-milk custard.',
+        ingredients: [
+          '300g Checkers bulk lean mince',
+          '1 cup cooked brown lentils',
+          '1 large brown onion, diced',
+          '2 medium carrots, finely grated',
+          '1.5 tbsp Rajah curry powder & 1 tsp turmeric (for rice)',
+          '2 tbsp canned tomatoes or chakalaka (for subtle tang)',
+          '2 Checkers large eggs + 1/2 cup full-cream milk (custard topping)',
+          '2 cups parboiled rice cooked with 1/2 tsp turmeric',
+          '1.5 tbsp Checkers sunflower oil, salt & pepper'
+        ],
+        steps: [
+          'Sauté & Brown: Heat oil in a pan over medium heat. Fry onions until soft, stir in curry powder for 60 seconds, then add mince and brown thoroughly.',
+          'Fold Stretcher: Stir in grated carrots, par-cooked lentils, canned tomatoes/chakalaka, salt, and pepper. Simmer for 8–10 minutes until aromatic and thick.',
+          'Assemble: Spoon the savoury meat mixture into a medium baking dish and smooth down the surface firmly.',
+          'Custard Crown: Whisk 2 eggs together with 1/2 cup milk and a pinch of salt. Pour gently over the back of a spoon across the meat.',
+          'Bake: Bake at 180°C for 20–25 minutes until the custard layer is puffed, set, and golden brown.',
+          'Serve: Slice into squares and serve alongside steaming yellow curry rice.'
+        ],
+        stretchTips: 'Combining lentils and grated carrots lets 300g of mince comfortably feed 6 adults without losing an ounce of richness.',
+        platingTips: 'The golden baked custard topping contrasts gorgeously against bright yellow turmeric rice. A side of chakalaka makes it authentic and zesty.'
+      },
+      'sausage-mac-skillet': {
+        id: 'sausage-mac-skillet',
+        title: 'Smoked Sausage & Chakalaka Mac Skillet',
+        category: 'pantry',
+        isSkillet: true,
+        isBatch: false,
+        tag: '20-Min One-Pan • Smoky & Cheesy',
+        image: 'https://images.unsplash.com/photo-1621996346565-e3d5d62817d1?auto=format&fit=crop&w=800&q=80',
+        cost: '~R15.00 / portion',
+        time: '20 mins skillet',
+        yield: '4–5 portions',
+        desc: 'A smoky, cheesy weeknight crowd-pleaser: seared smoked Russian sausage slices tossed with tender macaroni, sweetcorn kernels, and spicy chakalaka, smothered in melted cheddar.',
+        ingredients: [
+          '300g Checkers macaroni, boiled in salted water and drained',
+          '350g Eskort or Checkers smoked Russian sausages, sliced into coins',
+          '1/2 can (200g) Checkers chakalaka',
+          '1/2 can (200g) whole kernel sweetcorn, drained',
+          '1 small brown onion, diced',
+          '100g Checkers cheddar cheese, freshly grated',
+          '1 tbsp Checkers sunflower oil, salt & black pepper'
+        ],
+        steps: [
+          'Crisp Sausage: Heat oil in a deep skillet over high heat. Sear the sausage slices for 3–4 minutes until blistered with crispy edges. Add diced onions and cook 2 minutes.',
+          'Toss In Macaroni: Add the cooked macaroni directly to the skillet.',
+          'Fold Relish & Corn: Spoon in the chakalaka and sweetcorn. Toss vigorously over medium heat for 2 minutes so the smoky pan drippings glaze the pasta.',
+          'Melt Cheese: Lower heat, scatter grated cheddar cheese over the top, and cover with a lid for 2 minutes until bubbling and melted.',
+          'Serve: Dish straight from the skillet while the cheese is gooey and stringy.'
+        ],
+        stretchTips: 'If you want to stretch it to 6 portions, stir in 1 cup of par-cooked brown lentils along with the chakalaka—they blend invisibly into the sauce.',
+        platingTips: 'Serve in wide pasta bowls with an extra crack of black pepper. The smoky Russian sausage and spicy chakalaka cut through the melted cheddar.'
+      },
+      'potato-frittata': {
+        id: 'potato-frittata',
+        title: 'Spanish Potato, Onion & Cheddar Tortilla',
+        category: 'pantry',
+        isSkillet: true,
+        isBatch: true,
+        tag: 'Skillet Classic • High Protein',
+        image: 'https://images.unsplash.com/photo-1584776296944-ab6fb57b0bdd?auto=format&fit=crop&w=800&q=80',
+        cost: '~R10.50 / portion',
+        time: '25 mins stovetop',
+        yield: '4 large wedges',
+        desc: 'The golden standard of budget gastronomy: thin potato rounds and sweet caramelized onions cooked until buttery-soft, suspended in whisked eggs with a hint of sharp melted cheddar.',
+        ingredients: [
+          '4 medium potatoes, peeled and sliced into 3mm rounds',
+          '1 large brown onion, halved and thinly sliced',
+          '5 Checkers large eggs, well beaten',
+          '60g Checkers cheddar cheese, grated',
+          '3 tbsp Checkers sunflower oil',
+          '1/2 tsp salt & freshly cracked black pepper'
+        ],
+        steps: [
+          'Slow-Cook Roots: Heat oil in a 24cm non-stick frying pan over medium-low heat. Add sliced potatoes and onions with a generous pinch of salt. Cook gently for 12–15 minutes, stirring occasionally, until potatoes are tender but not browned.',
+          'Whisk Eggs: In a large bowl, whisk the 5 eggs with grated cheddar, salt, and black pepper.',
+          'Combine: Drain any excess oil from the pan into a cup. Tip the warm potatoes and onions directly into the beaten eggs, gently pressing them down so they absorb the egg mixture for 2 minutes.',
+          'Cook Tortilla: Pour 1 tsp of the reserved oil back into the skillet over medium heat. Pour in the egg and potato mixture, smoothing the top flat.',
+          'Set & Flip: Cook for 4–5 minutes on low until the edges are set and center is almost firm. Invert onto a plate, slide back into the pan, and cook the reverse side for 2 minutes.',
+          'Rest: Slide onto a board and let rest 5 minutes before cutting into wedges.'
+        ],
+        stretchTips: 'Keeps brilliantly in the fridge for up to 4 days. Pack cold wedges in lunchboxes or sandwich between bread with a dab of tomato relish.',
+        platingTips: 'Serve warm or room temperature with a side of crunchy shredded cabbage slaw dressed in a dash of oil, salt, and vinegar.'
+      },
+      'potjie-stew': {
+        id: 'potjie-stew',
+        title: 'Rustic Chicken, Potato & Carrot Potjie Stew',
+        category: 'pantry',
+        isSkillet: false,
+        isBatch: true,
+        tag: 'Slow Simmer • Rich Gravy',
+        image: 'https://images.unsplash.com/photo-1547592180-85f173990554?auto=format&fit=crop&w=800&q=80',
+        cost: '~R19.50 / portion',
+        time: '50 mins simmer',
+        yield: '5–6 hearty portions',
+        desc: 'Different from sheet-pan roasted chicken: bone-in chicken thighs and drumsticks slow-simmered in a deep, fragrant pot with hearty potato halves and sweet carrot chunks in a thick tomato-curry gravy.',
+        ingredients: [
+          '1–1.2 kg Farmer’s Choice mixed chicken pieces',
+          '4 medium potatoes, peeled and cut into chunky halves',
+          '3 large carrots, scraped and sliced into 2cm coins',
+          '1 large brown onion, cut into 8 thick petals',
+          '1 can (410g) Checkers chopped peeled tomatoes',
+          '1 tbsp Rajah mild curry powder or BBQ chicken spice',
+          '1 chicken stock cube dissolved in 1.5 cups hot water',
+          '2 tbsp Checkers sunflower oil, salt & black pepper'
+        ],
+        steps: [
+          'Sear Chicken: Heat oil in a heavy-bottomed pot over medium-high heat. Brown chicken pieces on both sides for 6–8 minutes until golden. Transfer to a plate.',
+          'Sauté Roots: Add onion petals and carrots to the rendered fat in the pot. Stir in curry powder or chicken spice for 1 minute until fragrant.',
+          'Deglaze & Simmer: Pour in the canned chopped tomatoes and prepared chicken stock, stirring up all caramelised pan bits.',
+          'Layer: Return chicken pieces into the pot and arrange potato halves snugly around and over the chicken.',
+          'Slow Simmer: Bring to a gentle simmer, cover tightly with a lid, and cook on low heat for 40–45 minutes undisturbed until chicken is fall-apart tender and potatoes are meltingly soft.',
+          'Finish: Gently stir to crush one potato half against the side of the pot to naturally thicken the rich gravy.'
+        ],
+        stretchTips: 'Ladle generously over hot stiff stywepap or fluffy parboiled rice. The dense gravy stretches each portion effortlessly across two dinners.',
+        platingTips: 'Serve in wide, deep bowls topped with cracked black pepper, accompanied by a steaming mound of stywepap.'
+      },
+      'cabbage-fritters': {
+        id: 'cabbage-fritters',
+        title: 'Crispy Shredded Cabbage & Carrot Fritters',
+        category: 'pantry',
+        isSkillet: true,
+        isBatch: false,
+        tag: 'Crispy Skillet • Veggie Hero',
+        image: 'https://images.unsplash.com/photo-1563379091339-03b21ab4a4f8?auto=format&fit=crop&w=800&q=80',
+        cost: '~R8.50 / portion',
+        time: '15 mins skillet',
+        yield: '4 large crispy patties',
+        desc: 'An ingenious way to turn a bulky cabbage head into a crispy, golden pan-fried delicacy. Shredded cabbage and carrots bound with egg, soy sauce, and a whisper of maize meal, shallow-fried until crunchy.',
+        ingredients: [
+          '3.5 cups green cabbage, finely shredded',
+          '1 large carrot, finely grated',
+          '1 small onion, thinly sliced',
+          '2 Checkers large eggs, lightly beaten',
+          '3 tbsp maize meal or flour',
+          '1.5 tbsp soy sauce & 1/2 tsp garlic powder',
+          '3 tbsp Checkers sunflower oil for frying, pinch of salt & pepper'
+        ],
+        steps: [
+          'Sweat Veggies: In a large bowl, toss shredded cabbage, grated carrot, and onion with 1/2 tsp salt. Massage with your hands for 1 minute to soften the cabbage volume.',
+          'Bind: Whisk eggs, soy sauce, garlic powder, and black pepper. Pour over cabbage, then fold in 3 tbsp maize meal or flour until everything clings together in a loose batter.',
+          'Pan Fry: Heat 2 tbsp oil in a wide skillet over medium heat. Scoop 1/2 cup mounds into the pan, pressing them down flat with a spatula into 1.5cm patties.',
+          'Crisp Both Sides: Fry for 3–4 minutes per side until the edges are deep golden-brown and crackling crisp.',
+          'Drain & Serve: Drain briefly on kitchen towel and serve hot.'
+        ],
+        stretchTips: 'Uses up leftover cabbage leaves before they lose their crunch. Pair with a fried egg on top for a full 20g+ protein dinner for under R15.',
+        platingTips: 'Stack crispy patties two-high, crown with a sunny-side fried egg, and drizzle with soy sauce or a spoonful of sweet chakalaka.'
+      },
+      'pap-cakes': {
+        id: 'pap-cakes',
+        title: 'Crispy Pan-Fried Pap Cakes with Chakalaka & Fried Eggs',
+        category: 'pantry',
+        isSkillet: true,
+        isBatch: false,
+        tag: 'Zero-Waste • Crispy Hash',
+        image: 'https://images.unsplash.com/photo-1525351484163-7529414344d8?auto=format&fit=crop&w=800&q=80',
+        cost: '~R9.00 / portion',
+        time: '15 mins skillet',
+        yield: '4 crispy patties',
+        desc: 'Give leftover stiff stywepap a high-end makeover: shaped into dense rounds, shallow-fried until crunchy like rustic hashbrowns on the outside, and topped with warm chakalaka and a fried egg.',
+        ingredients: [
+          '2.5 cups cold, firm leftover stiff stywepap (from the fridge)',
+          '1/2 can Checkers chakalaka',
+          '2–4 Checkers large eggs',
+          '2.5 tbsp Checkers sunflower oil',
+          'Coarse sea salt and cracked black pepper'
+        ],
+        steps: [
+          'Shape Patties: Take cold, firm pap from the fridge. With damp hands, form into 4 round patties (approx. 1.5 cm thick).',
+          'Pan Fry Crunchy: Heat 2 tbsp oil in a frying pan over medium-high heat. Place the pap cakes into the hot oil. Fry for 4–5 minutes per side without moving them until a deep, crunchy golden crust forms.',
+          'Heat Relish: In a small pan or microwave, warm the chakalaka until bubbling.',
+          'Fry Eggs: In the same skillet or alongside, fry eggs in a drop of oil sunny-side up until whites are crisp-edged and yolks runny.',
+          'Assemble: Place crispy pap cakes on plates, spoon hot chakalaka generously over the crunchy crust, and top each with a sunny fried egg.'
+        ],
+        stretchTips: 'Never throw out leftover pap! Cold stywepap is firm and easy to handle, frying up crispier than freshly made porridge.',
+        platingTips: 'Serve hot on rustic plates. When the knife cuts into the crispy crust and the golden yolk mixes into the spicy chakalaka, it feels like gourmet comfort food.'
+      }
+    };
+
+    // --- SHOPPING LIST DATABASE WITH STORE FLOW SEQUENCE ---
+    // storeOrder: 1 = Entrance Produce/Bakery, 2 = Centre Grains, 3 = Centre Canned/Pantry, 4 = Cold Chain/Butchery
+    const SHOPPING_ITEMS = [
+      // Produce & Bakery (Store Entrance)
+      { id: 12, phase: 'haul1', aisle: 'Produce Section (Entrance)', storeOrder: 1, name: 'Pocket Potatoes (7 kg medium pocket)', price: 89.00, note: 'Store in cool dry cupboard away from onions' },
+      { id: 13, phase: 'haul1', aisle: 'Produce Section (Entrance)', storeOrder: 1, name: 'Brown Onions (3 kg mesh bag)', price: 45.00, note: 'Keep in ventilated dark basket' },
+      { id: 14, phase: 'haul1', aisle: 'Produce Section (Entrance)', storeOrder: 1, name: 'Fresh Carrots (3 kg bag)', price: 38.00, note: 'Grated to double mince volume' },
+      { id: 15, phase: 'haul1', aisle: 'Produce Section (Entrance)', storeOrder: 1, name: 'Large Green Cabbage (1 whole head)', price: 22.00, note: 'Keeps 3-4 weeks in crisper drawer' },
+      { id: 21, phase: 'week2', aisle: 'Bakery Section', storeOrder: 1, name: 'Fresh Sliced Loaves of Bread (x2)', price: 36.00, note: 'R18 each for toast and sandwiches' },
+      { id: 25, phase: 'week3', aisle: 'Bakery Section', storeOrder: 1, name: 'Fresh Sliced Loaves of Bread (x2)', price: 36.00, note: 'R18 each' },
+      { id: 26, phase: 'week4', aisle: 'Produce Section (Entrance)', storeOrder: 1, name: 'Large Green Cabbage (1 whole head)', price: 22.00, note: 'Fresh crunchy stir fries' },
+      { id: 29, phase: 'week4', aisle: 'Bakery Section', storeOrder: 1, name: 'Fresh Sliced Loaf of Bread (x1)', price: 18.00, note: 'Toast and quick lunches' },
+
+      // Centre Aisles: Dry Grains & Carbs
+      { id: 1, phase: 'haul1', aisle: 'Aisle 4: Grains & Flours', storeOrder: 2, name: 'Checkers Parboiled Long Grain Rice (5 kg)', price: 95.00, note: 'Core starch foundation for month' },
+      { id: 2, phase: 'haul1', aisle: 'Aisle 4: Grains & Flours', storeOrder: 2, name: 'White Star / Ace Super Maize Meal (5 kg)', price: 55.00, note: 'Stiff stywepap and morning porridge' },
+      { id: 3, phase: 'haul1', aisle: 'Aisle 4: Grains & Flours', storeOrder: 2, name: 'Champion Samp & Sugar Beans Mix (2 kg)', price: 42.00, note: 'High calorie & protein staple' },
+      { id: 4, phase: 'haul1', aisle: 'Aisle 5: Pulses & Legumes', storeOrder: 2, name: 'Checkers Housebrand Dry Brown Lentils (1 kg)', price: 38.00, note: 'Essential meat multiplier' },
+      { id: 5, phase: 'haul1', aisle: 'Aisle 5: Pasta & Sauces', storeOrder: 2, name: 'Housebrand Spaghetti & Macaroni (3 x 500g)', price: 48.00, note: 'R16 each' },
+
+      // Centre Aisles: Canned Goods & Pantry Basics
+      { id: 6, phase: 'haul1', aisle: 'Aisle 6: Canned Vegetables', storeOrder: 3, name: 'Checkers Chopped Peeled Tomatoes (6 cans)', price: 96.00, note: 'R16 per can' },
+      { id: 7, phase: 'haul1', aisle: 'Aisle 6: Canned Fish & Meat', storeOrder: 3, name: 'Shredded Light Meat Tuna in Brine (4 cans)', price: 65.00, note: 'Checkers multi-buy promo' },
+      { id: 8, phase: 'haul1', aisle: 'Aisle 6: Canned Vegetables', storeOrder: 3, name: 'Checkers Chakalaka Mild/Hot (4 cans)', price: 64.00, note: 'R16 per can' },
+      { id: 9, phase: 'haul1', aisle: 'Aisle 6: Canned Vegetables', storeOrder: 3, name: 'Whole Kernel Sweetcorn (2 cans)', price: 34.00, note: 'For tuna pasta bake' },
+      { id: 10, phase: 'haul1', aisle: 'Aisle 7: Oils & Condiments', storeOrder: 3, name: 'Checkers Pure Sunflower Oil (2 Litres)', price: 69.00, note: 'Monthly cooking oil' },
+      { id: 11, phase: 'haul1', aisle: 'Aisle 7: Spices & Seasoning', storeOrder: 3, name: 'Spices: Rajah Curry, Chicken Spice, Soy Sauce', price: 85.00, note: 'Pantry restocking' },
+
+      // Butchery & Cold Chain (Perimeter / Back)
+      { id: 16, phase: 'haul1', aisle: 'Butchery Cold Chain', storeOrder: 4, name: 'Farmer’s Choice Mixed Chicken Pieces (~2 kg)', price: 145.00, note: 'Braai pack portions' },
+      { id: 17, phase: 'haul1', aisle: 'Dairy & Egg Chillers', storeOrder: 4, name: 'Checkers Large Eggs (30-egg tray)', price: 79.00, note: 'High yield breakfast & fried rice' },
+      { id: 18, phase: 'week2', aisle: 'Processed Meat Chiller', storeOrder: 4, name: 'Eskort Smoked Russian Sausages (500g)', price: 49.00, note: 'For sweet cabbage stir-fry' },
+      { id: 19, phase: 'week2', aisle: 'Frozen Foods Aisle', storeOrder: 4, name: 'Checkers Frozen Country-Crop Mix (1 kg)', price: 35.00, note: 'Peas, corn & carrots for fried rice' },
+      { id: 20, phase: 'week2', aisle: 'Dairy & Egg Chillers', storeOrder: 4, name: 'Checkers Large Eggs (18-pack top up)', price: 54.00, note: 'Protein top-up' },
+      { id: 22, phase: 'week3', aisle: 'Butchery Counter', storeOrder: 4, name: 'Checkers Bulk Lean Beef or Pork Mince (1 kg)', price: 125.00, note: 'Use 500g for 6-8 portions; freeze other 500g!' },
+      { id: 23, phase: 'week3', aisle: 'Dairy Chiller: Cheese', storeOrder: 4, name: 'Checkers Cheddar Cheese Wedge (400g)', price: 65.00, note: 'For cottage pie crust & pasta bakes' },
+      { id: 24, phase: 'week3', aisle: 'Dairy Chiller: Milk', storeOrder: 4, name: 'Checkers Long Life Full Cream Milk (1 Litre)', price: 18.00, note: 'For whipping mashed potatoes' },
+      { id: 27, phase: 'week4', aisle: 'Processed Meat Chiller', storeOrder: 4, name: 'Wors or Smoked Russian Sausages (500g)', price: 49.00, note: 'Quick weeknight skillet' },
+      { id: 28, phase: 'week4', aisle: 'Dairy & Egg Chillers', storeOrder: 4, name: 'Checkers Eggs (18-pack)', price: 54.00, note: 'End of month protein' }
+    ];
+
+    // --- STATE MANAGEMENT ---
+    const STORAGE_KEY = 'checkers_grove_mall_checked_items';
+    const TROLLEY_MODE_KEY = 'checkers_grove_mall_trolley_mode';
+
+    function loadSavedChecked() {
+      try {
+        const raw = localStorage.getItem(STORAGE_KEY);
+        if (raw) return new Set(JSON.parse(raw));
+      } catch (e) {
+        console.warn('Storage not accessible', e);
+      }
+      return new Set();
+    }
+
+    function saveChecked() {
+      try {
+        localStorage.setItem(STORAGE_KEY, JSON.stringify([...checkedItems]));
+      } catch (e) {
+        console.warn('Storage not saved', e);
+      }
+    }
+
+    let checkedItems = loadSavedChecked();
+    let undoPreviousChecked = null;
+    let undoToastTimeout = null;
+    let currentShoppingFilter = 'all';
+    let currentShoppingSearch = '';
+    let isTrolleyMode = localStorage.getItem(TROLLEY_MODE_KEY) === 'true';
+    let activeModalTriggerEl = null;
+
+    // --- 4-WEEK SCHEDULE DATABASE ---
+    const SCHEDULE_DATA = {
+      1: {
+        theme: "Curry Warmth & Chicken Roast",
+        schedule: [
+          { day: "Monday", meal: "Hearty Curried Lentil & Root Stew with Rice", type: "Cook Big Batch", recipeId: "lentil-stew", desc: "Cook 6 portions; save half for effortless lunches and Tuesday dinner." },
+          { day: "Tuesday", meal: "Leftover Curried Lentil Stew with Toasted Bread", type: "5-Min Reheat", recipeId: "lentil-stew", desc: "Zero cooking required; flavors are even richer on day two." },
+          { day: "Wednesday", meal: "Sheet-Pan Roast Chicken Pieces & Crispy Wedges", type: "Hands-Off Oven", recipeId: "chicken-wedges", desc: "Toss chicken and potato wedges onto one tray with chicken spice." },
+          { day: "Thursday", meal: "Leftover Roast Chicken & Root Veggies", type: "5-Min Reheat", recipeId: "chicken-wedges", desc: "Warm shredded chicken and wedges in skillet or microwave." },
+          { day: "Friday", meal: "Crispy Egg & Garden Veg Fried Rice", type: "15-Min Skillet", recipeId: "fried-rice", desc: "Use Wednesday's chilled leftover rice with eggs and frozen veggies." },
+          { day: "Saturday", meal: "Creamy Chakalaka & Bean Samp with Fried Egg", type: "Cozy Simmer", recipeId: "chakalaka-samp", desc: "Hearty traditional South African comfort food bowl." },
+          { day: "Sunday", meal: "Lentil Stew with Stiff Pap (Stywepap)", type: "Sunday Meal", recipeId: "lentil-stew", desc: "Serve fresh hot stiff pap with warm savoury lentil gravy." }
+        ]
+      },
+      2: {
+        theme: "Skillets, Pasta Bakes & Soul Food",
+        schedule: [
+          { day: "Monday", meal: "Sweet Cabbage & Smoked Sausage Sauté over Rice", type: "15-Min Skillet", recipeId: "cabbage-sausage", desc: "Shredded cabbage quickly cooked with crispy browned Russian sausage." },
+          { day: "Tuesday", meal: "Leftover Sausage & Cabbage Bowl with Pap", type: "5-Min Reheat", recipeId: "cabbage-sausage", desc: "Quick hearty dinner served over freshly whipped maize meal." },
+          { day: "Wednesday", meal: "Golden Tuna & Sweetcorn Pasta Bake", type: "Cook Big Batch", recipeId: "tuna-pasta", desc: "Macaroni tossed with tuna, sweetcorn, and a melted cheddar crust." },
+          { day: "Thursday", meal: "Leftover Cheesy Tuna Pasta Bake with Sliced Tomatoes", type: "5-Min Reheat", recipeId: "tuna-pasta", desc: "Warm through until cheese bubbles." },
+          { day: "Friday", meal: "Egg & Country-Crop Veg Fried Rice", type: "15-Min Skillet", recipeId: "fried-rice", desc: "Crispy high-heat wok dinner." },
+          { day: "Saturday", meal: "Creamy Chakalaka & Sugar Bean Samp", type: "Comfort Bowl", recipeId: "chakalaka-samp", desc: "Slow cooked samp topped with rich mild chakalaka." },
+          { day: "Sunday", meal: "Sheet-Pan Chicken Drumsticks with Sweet Carrots", type: "Sunday Roast", recipeId: "chicken-wedges", desc: "Roast drumsticks with caramelized carrots and potatoes." }
+        ]
+      },
+      3: {
+        theme: "The Lentil-Stretched Mince Master Week",
+        schedule: [
+          { day: "Monday", meal: "Lentil-Stretched Mince over Spaghetti Bolognese", type: "Master Cook", recipeId: "mince", desc: "Cook 500g mince + 1 cup lentils + carrots into 6-8 rich portions. Serve with grated cheddar." },
+          { day: "Tuesday", meal: "Savoury Mince Spooned over Steamed Rice or Toast", type: "5-Min Reheat", recipeId: "mince", desc: "Ladle hot savoury mince over rice or thick toasted bread slices." },
+          { day: "Wednesday", meal: "Crispy-Crusted Mince & Mash Cottage Pie", type: "Oven Bake", recipeId: "mince", desc: "Spoon pre-made mince into casserole dish, top with milk-whipped mash, grill till golden." },
+          { day: "Thursday", meal: "Leftover Cottage Pie with Buttered Carrots", type: "5-Min Reheat", recipeId: "mince", desc: "Quick reheat in oven or microwave for an instant warm dinner." },
+          { day: "Friday", meal: "Crispy Egg & Country-Crop Fried Rice", type: "15-Min Skillet", recipeId: "fried-rice", desc: "Friday fast-food alternative using eggs and frozen veggies." },
+          { day: "Saturday", meal: "Stretched Savoury Mince over Hot Stiff Pap", type: "Cozy Dinner", recipeId: "mince", desc: "Comforting Pretoria dinner pairing rich meat sauce with stywepap." },
+          { day: "Sunday", meal: "Cheesy Stuffed Baked Jacket Potatoes", type: "Sunday Treat", recipeId: "mince", desc: "Slit baked potatoes stuffed with hot mince and topped with melted cheddar." }
+        ]
+      },
+      4: {
+        theme: "End-of-Month Pantry Masterpieces",
+        schedule: [
+          { day: "Monday", meal: "Curried Lentil Stew with Stiff Pap (Stywepap)", type: "Warm Stew", recipeId: "lentil-stew", desc: "Comforting brown lentils with warm Rajah curry and potatoes." },
+          { day: "Tuesday", meal: "Cheesy Macaroni & Tuna Bake", type: "Oven Comfort", recipeId: "tuna-pasta", desc: "Creamy baked pasta using pantry tuna cans." },
+          { day: "Wednesday", meal: "Cabbage, Onion & Sausage Stir-Fry with Rice", type: "15-Min Skillet", recipeId: "cabbage-sausage", desc: "Peppery, sweet, and crisp." },
+          { day: "Thursday", meal: "Crispy Fried Rice with Fried Eggs on Top", type: "Quick Dinner", recipeId: "fried-rice", desc: "Fried sunny-side eggs atop crisp seasoned rice." },
+          { day: "Friday", meal: "Simple Tuna Pasta with Sweetcorn & Black Pepper", type: "15-Min Quick", recipeId: "tuna-pasta", desc: "Tossed in olive/sunflower oil with herbs." },
+          { day: "Saturday", meal: "Roast Potato Wedges, Fried Eggs & Toast", type: "Brunch Dinner", recipeId: "chicken-wedges", desc: "Comfort food classic." },
+          { day: "Sunday", meal: "Chakalaka & Bean Pap with Grilled Sausages", type: "Celebration", recipeId: "chakalaka-samp", desc: "End-of-month feast using up remaining dry staples." }
+        ]
+      }
+    };
+
+    let currentSelectedWeek = 1; // Clean chronological default for Jordan and first-timers
+
+    // --- NAVIGATION TAB SWITCHING ---
+    function switchTab(tabId) {
+      document.querySelectorAll('.tab-view').forEach(view => view.classList.add('hidden'));
+      document.querySelectorAll('.tab-btn').forEach(btn => {
+        btn.classList.remove('bg-brand-terracotta', 'text-white', 'shadow-sm');
+        btn.classList.add('bg-brand-sand', 'text-brand-charcoal');
+      });
+
+      const activeView = document.getElementById(`view-${tabId}`);
+      const activeBtn = document.getElementById(`tab-btn-${tabId}`);
+      if (activeView) activeView.classList.remove('hidden');
+      if (activeBtn) {
+        activeBtn.classList.remove('bg-brand-sand', 'text-brand-charcoal');
+        activeBtn.classList.add('bg-brand-terracotta', 'text-white', 'shadow-sm');
+      }
+
+      if (tabId === 'shopping') renderShopping();
+      if (tabId === 'schedule') selectCalendarWeek(currentSelectedWeek);
+    }
+
+    function handleRecipeImageError(img, recipeId) {
+      img.onerror = function() {
+        // If secondary fallback fails, show styled culinary backdrop
+        img.style.display = 'none';
+        const placeholder = img.parentElement.querySelector('.image-fallback-placeholder');
+        if (placeholder) placeholder.classList.remove('hidden');
+      };
+      // Backup food image for pasta or stews
+      img.src = 'https://images.unsplash.com/photo-1543339308-43e59d6b73a6?auto=format&fit=crop&w=800&q=80';
+    }
+
+    // --- RECIPES RENDERING & SEARCH ---
+    let currentRecipeCategory = 'all';
+
+    function setRecipeCategoryFilter(category) {
+      currentRecipeCategory = category;
+      document.querySelectorAll('.recipe-cat-btn').forEach(btn => {
+        btn.classList.remove('bg-brand-charcoal', 'text-white');
+        btn.classList.add('bg-white', 'text-brand-charcoal', 'border', 'border-brand-border');
+      });
+      const activeBtn = document.getElementById(`recipe-filter-btn-${category}`);
+      if (activeBtn) {
+        activeBtn.classList.remove('bg-white', 'text-brand-charcoal', 'border', 'border-brand-border');
+        activeBtn.classList.add('bg-brand-charcoal', 'text-white');
+      }
+      const searchInput = document.getElementById('recipe-search-input');
+      renderRecipeCards(searchInput ? searchInput.value : '');
+    }
+
+    function renderRecipeCards(filterText = '') {
+      const container = document.getElementById('recipe-cards-grid');
+      if (!container) return;
+
+      const allKeys = Object.keys(RECIPES);
+      const query = filterText.toLowerCase().trim();
+
+      const filteredKeys = allKeys.filter(key => {
+        const r = RECIPES[key];
+        if (!r) return false;
+
+        // Category filter
+        if (currentRecipeCategory === 'core' && r.category !== 'core') return false;
+        if (currentRecipeCategory === 'pantry' && r.category !== 'pantry') return false;
+        if (currentRecipeCategory === 'skillet' && !r.isSkillet) return false;
+        if (currentRecipeCategory === 'batch' && !r.isBatch) return false;
+
+        // Search query
+        if (!query) return true;
+        return r.title.toLowerCase().includes(query) ||
+               r.desc.toLowerCase().includes(query) ||
+               (r.tag && r.tag.toLowerCase().includes(query)) ||
+               r.ingredients.some(ing => ing.toLowerCase().includes(query));
+      });
+
+      if (filteredKeys.length === 0) {
+        container.innerHTML = `
+          <div class="col-span-full p-8 text-center bg-white rounded-3xl border border-brand-border">
+            <p class="text-sm text-brand-muted">No recipes found matching "${filterText || currentRecipeCategory}".</p>
+            <button onclick="document.getElementById('recipe-search-input').value=''; setRecipeCategoryFilter('all');" class="mt-2 text-xs font-semibold text-brand-terracotta hover:underline">
+              Clear filters & show all recipes
+            </button>
+          </div>
+        `;
+        return;
+      }
+
+      container.innerHTML = filteredKeys.map(key => {
+        const r = RECIPES[key];
+        const isMaster = key === 'mince';
+        const isNewPantry = r.category === 'pantry';
+        return `
+          <div 
+            class="bg-white rounded-3xl border ${isMaster ? 'border-brand-terracotta/60 ring-2 ring-brand-terracotta/20' : 'border-brand-border'} overflow-hidden shadow-xs hover:shadow-md transition flex flex-col justify-between group cursor-pointer" 
+            onclick="openRecipeModal('${r.id}', this)"
+            tabindex="0"
+            role="button"
+            onkeydown="if(event.key==='Enter'||event.key===' '){event.preventDefault();openRecipeModal('${r.id}', this);}"
+          >
+            <div>
+              <div class="h-44 sm:h-48 overflow-hidden relative bg-brand-sand">
+                <img 
+                  src="${r.image}" 
+                  alt="${r.title}" 
+                  class="w-full h-full object-cover group-hover:scale-102 transition-transform duration-500"
+                  onerror="handleRecipeImageError(this, '${r.id}')"
+                >
+                <div class="image-fallback-placeholder hidden absolute inset-0 bg-brand-sand flex items-center justify-center p-4 text-center">
+                  <span class="font-serif font-bold text-sm text-brand-charcoal">${r.title}</span>
+                </div>
+                <span class="num-tabular absolute top-3 right-3 bg-white/95 backdrop-blur-sm text-brand-charcoal font-bold text-[11px] px-2.5 py-1 rounded-full shadow-xs border border-brand-border/60">
+                  ${r.cost}
+                </span>
+                ${isMaster ? '<span class="absolute top-3 left-3 bg-brand-terracotta text-white font-bold text-[10px] uppercase tracking-wider px-2 py-0.5 rounded-full shadow-xs">Master Dish</span>' : (isNewPantry ? '<span class="absolute top-3 left-3 bg-brand-sage text-white font-bold text-[10px] uppercase tracking-wider px-2 py-0.5 rounded-full shadow-xs">Pantry Creation</span>' : '')}
+              </div>
+              <div class="p-5 space-y-2">
+                <div class="text-[11px] uppercase tracking-wider font-semibold text-brand-terracotta">${r.tag}</div>
+                <h4 class="font-serif text-xl font-bold text-brand-charcoal group-hover:text-brand-terracotta transition-colors">${r.title}</h4>
+                <p class="text-xs text-brand-muted leading-relaxed line-clamp-3">${r.desc}</p>
+              </div>
+            </div>
+            <div class="p-5 pt-0">
+              <div class="pt-3 border-t border-brand-border/60 flex items-center justify-between text-xs text-brand-muted">
+                <span>⏱️ ${r.time}</span>
+                <span class="text-brand-terracotta font-semibold group-hover:translate-x-1 transition-transform inline-flex items-center gap-1">
+                  View Recipe →
+                </span>
+              </div>
+            </div>
+          </div>
+        `;
+      }).join('');
+    }
+
+    function filterRecipeCards(text) {
+      renderRecipeCards(text);
+    }
+
+    // --- RECIPE MODAL LOGIC & A11Y FOCUS TRAP ---
+    function openRecipeModal(recipeId, triggerEl = null) {
+      const r = RECIPES[recipeId];
+      if (!r) return;
+
+      activeModalTriggerEl = triggerEl || document.activeElement;
+
+      document.getElementById('modal-tag').innerText = r.tag;
+      document.getElementById('modal-title').innerText = r.title;
+      document.getElementById('modal-cost').innerText = r.cost;
+      document.getElementById('modal-time').innerText = `⏱️ ${r.time}`;
+      document.getElementById('modal-yield').innerText = `📦 ${r.yield}`;
+      document.getElementById('modal-desc').innerText = r.desc;
+      document.getElementById('modal-stretch').innerText = r.stretchTips;
+      document.getElementById('modal-plating').innerText = r.platingTips;
+
+      // Ingredients with clean indicators
+      const ingEl = document.getElementById('modal-ingredients');
+      ingEl.innerHTML = r.ingredients.map(ing => `
+        <li class="flex items-start gap-2">
+          <span class="text-brand-terracotta font-bold text-xs mt-0.5">•</span>
+          <span>${ing}</span>
+        </li>
+      `).join('');
+
+      // Cooking Steps
+      const stepsEl = document.getElementById('modal-steps');
+      stepsEl.innerHTML = r.steps.map(step => `
+        <li class="pl-1">${step}</li>
+      `).join('');
+
+      // Show Modal & lock background
+      const modal = document.getElementById('recipe-modal');
+      modal.classList.remove('hidden');
+      document.body.classList.add('overflow-hidden');
+
+      // Trap focus: focus close button
+      const closeBtn = modal.querySelector('button');
+      if (closeBtn) closeBtn.focus();
+    }
+
+    function closeRecipeModal() {
+      const modal = document.getElementById('recipe-modal');
+      modal.classList.add('hidden');
+      document.body.classList.remove('overflow-hidden');
+
+      // Restore focus to original trigger
+      if (activeModalTriggerEl && typeof activeModalTriggerEl.focus === 'function') {
+        activeModalTriggerEl.focus();
+      }
+    }
+
+    function handleModalBackdropClick(event) {
+      if (event.target.id === 'recipe-modal') {
+        closeRecipeModal();
+      }
+    }
+
+    window.addEventListener('keydown', (e) => {
+      if (e.key === 'Escape') closeRecipeModal();
+    });
+
+    // --- IN-STORE TROLLEY MODE TOGGLE ---
+    function toggleTrolleyMode() {
+      isTrolleyMode = !isTrolleyMode;
+      localStorage.setItem(TROLLEY_MODE_KEY, isTrolleyMode);
+      applyTrolleyModeVisuals();
+      renderShopping();
+    }
+
+    function applyTrolleyModeVisuals() {
+      const btn = document.getElementById('toggle-trolley-mode-btn');
+      const ind = document.getElementById('trolley-mode-indicator');
+      const bar = document.getElementById('trolley-sticky-bar');
+
+      if (isTrolleyMode) {
+        document.body.classList.add('trolley-mode-active');
+        if (btn) {
+          btn.classList.remove('bg-brand-sand', 'text-brand-charcoal');
+          btn.classList.add('bg-brand-charcoal', 'text-white', 'border-brand-charcoal');
+        }
+        if (ind) {
+          ind.classList.remove('bg-gray-400');
+          ind.classList.add('bg-green-400');
+        }
+        if (bar) bar.classList.remove('hidden');
+      } else {
+        document.body.classList.remove('trolley-mode-active');
+        if (btn) {
+          btn.classList.remove('bg-brand-charcoal', 'text-white', 'border-brand-charcoal');
+          btn.classList.add('bg-brand-sand', 'text-brand-charcoal');
+        }
+        if (ind) {
+          ind.classList.remove('bg-green-400');
+          ind.classList.add('bg-gray-400');
+        }
+        if (bar) bar.classList.add('hidden');
+      }
+    }
+
+    // --- SHOPPING LIST LOGIC & AISLE PROGRESSION ---
+    function filterShoppingCategory(filter, btnElement) {
+      currentShoppingFilter = filter;
+      document.querySelectorAll('.shop-filter-btn').forEach(btn => {
+        btn.classList.remove('bg-brand-charcoal', 'text-white');
+        btn.classList.add('bg-brand-sand', 'text-brand-charcoal');
+      });
+      if (btnElement) {
+        btnElement.classList.remove('bg-brand-sand', 'text-brand-charcoal');
+        btnElement.classList.add('bg-brand-charcoal', 'text-white');
+      }
+      renderShopping();
+    }
+
+    function handleShoppingSearch(query) {
+      currentShoppingSearch = query.toLowerCase().trim();
+      renderShopping();
+    }
+
+    function toggleCheck(itemId) {
+      if (checkedItems.has(itemId)) {
+        checkedItems.delete(itemId);
+      } else {
+        checkedItems.add(itemId);
+      }
+      saveChecked();
+      renderShopping();
+    }
+
+    function checkAllVisible() {
+      const itemsToDisplay = getFilteredShoppingItems();
+      itemsToDisplay.forEach(item => checkedItems.add(item.id));
+      saveChecked();
+      renderShopping();
+    }
+
+    // SAFE CLEAR CHECKS WITH 7-SECOND UNDO
+    function requestClearChecks() {
+      if (checkedItems.size === 0) return;
+
+      // Preserve previous state for undo
+      undoPreviousChecked = new Set(checkedItems);
+      checkedItems.clear();
+      saveChecked();
+      renderShopping();
+
+      // Show Undo Toast
+      const toast = document.getElementById('toast-undo');
+      const msg = document.getElementById('toast-undo-message');
+      if (toast && msg) {
+        msg.innerText = `Cleared ${undoPreviousChecked.size} checked items.`;
+        toast.classList.remove('hidden');
+
+        if (undoToastTimeout) clearTimeout(undoToastTimeout);
+        undoToastTimeout = setTimeout(() => {
+          dismissUndoToast();
+        }, 7000);
+      }
+    }
+
+    function executeUndoChecks() {
+      if (undoPreviousChecked && undoPreviousChecked.size > 0) {
+        checkedItems = new Set(undoPreviousChecked);
+        undoPreviousChecked = null;
+        saveChecked();
+        renderShopping();
+        dismissUndoToast();
+      }
+    }
+
+    function dismissUndoToast() {
+      const toast = document.getElementById('toast-undo');
+      if (toast) toast.classList.add('hidden');
+      if (undoToastTimeout) clearTimeout(undoToastTimeout);
+    }
+
+    function getFilteredShoppingItems() {
+      return SHOPPING_ITEMS.filter(item => {
+        // Phase Filter
+        if (currentShoppingFilter !== 'all' && item.phase !== currentShoppingFilter) {
+          return false;
+        }
+        // Search Filter
+        if (currentShoppingSearch) {
+          const matchName = item.name.toLowerCase().includes(currentShoppingSearch);
+          const matchAisle = item.aisle.toLowerCase().includes(currentShoppingSearch);
+          const matchNote = item.note.toLowerCase().includes(currentShoppingSearch);
+          if (!matchName && !matchAisle && !matchNote) return false;
+        }
+        return true;
+      });
+    }
+
+    function renderShopping() {
+      const container = document.getElementById('shopping-cards-container');
+      const sinkContainer = document.getElementById('trolley-sink-container');
+      if (!container) return;
+
+      const itemsToDisplay = getFilteredShoppingItems();
+
+      // In Trolley Mode: Separate unchecked vs checked items (auto-sink)
+      let activeItems = [];
+      let checkedInTrolley = [];
+
+      itemsToDisplay.forEach(item => {
+        if (isTrolleyMode && checkedItems.has(item.id)) {
+          checkedInTrolley.push(item);
+        } else {
+          activeItems.push(item);
+        }
+      });
+
+      // Sort items by physical Checkers storeOrder (Produce -> Grains -> Pantry -> Cold Chain)
+      activeItems.sort((a, b) => a.storeOrder - b.storeOrder);
+      checkedInTrolley.sort((a, b) => a.storeOrder - b.storeOrder);
+
+      // Group active items by Aisle
+      const grouped = {};
+      activeItems.forEach(item => {
+        if (!grouped[item.aisle]) grouped[item.aisle] = [];
+        grouped[item.aisle].push(item);
+      });
+
+      // Calculations: Total Checked Spend vs Phase Target Spend
+      let calculatedTotal = 0;
+      SHOPPING_ITEMS.forEach(item => {
+        if (checkedItems.has(item.id)) calculatedTotal += item.price;
+      });
+
+      // Active Phase Target Spend calculation
+      let phaseTargetSpend = 0;
+      let phaseCheckedSpend = 0;
+      let phaseTotalItems = 0;
+      let phaseCheckedItems = 0;
+
+      itemsToDisplay.forEach(item => {
+        phaseTargetSpend += item.price;
+        phaseTotalItems++;
+        if (checkedItems.has(item.id)) {
+          phaseCheckedSpend += item.price;
+          phaseCheckedItems++;
+        }
+      });
+
+      let html = '';
+      if (Object.keys(grouped).length === 0 && checkedInTrolley.length === 0) {
+        html = `
+          <div class="col-span-full p-8 text-center bg-white rounded-3xl border border-brand-border">
+            <p class="text-sm text-brand-muted">No grocery items found matching your current filters.</p>
+          </div>
+        `;
+      } else {
+        for (const [aisleName, items] of Object.entries(grouped)) {
+          html += `
+            <section class="shopping-category-card bg-white p-5 rounded-3xl border border-brand-border shadow-xs space-y-3">
+              <div class="flex items-center justify-between border-b border-brand-border pb-2">
+                <h4 class="font-serif text-base sm:text-lg font-bold text-brand-charcoal">${aisleName}</h4>
+                <span class="num-tabular text-[11px] font-semibold text-brand-muted">${items.length} item${items.length > 1 ? 's' : ''}</span>
+              </div>
+              <div class="space-y-2">
+          `;
+
+          items.forEach(item => {
+            const isChecked = checkedItems.has(item.id);
+            const tapPadding = isTrolleyMode ? 'p-3.5 min-h-[56px]' : 'p-2.5';
+            const checkboxSize = isTrolleyMode ? 'w-5 h-5' : 'w-4 h-4';
+
+            html += `
+              <div 
+                onclick="toggleCheck(${item.id})" 
+                tabindex="0"
+                role="checkbox"
+                aria-checked="${isChecked}"
+                onkeydown="if(event.key==='Enter'||event.key===' '){event.preventDefault();toggleCheck(${item.id});}"
+                class="trolley-item-btn flex items-start gap-3 ${tapPadding} rounded-xl transition cursor-pointer select-none hover:bg-brand-sand/50 ${isChecked ? 'bg-brand-sageLight/50' : 'bg-brand-cream/40 border border-brand-border/40'}"
+              >
+                <input 
+                  type="checkbox" 
+                  ${isChecked ? 'checked' : ''} 
+                  tabindex="-1"
+                  class="mt-1 ${checkboxSize} rounded text-brand-terracotta focus:ring-brand-terracotta pointer-events-none"
+                >
+                <div class="flex-1 text-xs">
+                  <div class="flex justify-between items-baseline gap-2">
+                    <span class="font-semibold ${isChecked ? 'line-through text-brand-muted' : 'text-brand-charcoal'}">${item.name}</span>
+                    <span class="num-tabular font-bold text-brand-charcoal ml-2 flex-shrink-0">R${item.price.toFixed(2)}</span>
+                  </div>
+                  <p class="text-[11px] text-brand-muted mt-0.5 leading-snug">${item.note}</p>
+                </div>
+              </div>
+            `;
+          });
+
+          html += `
+              </div>
+            </section>
+          `;
+        }
+      }
+
+      container.innerHTML = html;
+
+      // Render Trolley Mode Sink Drawer (Checked items sunk to bottom)
+      if (sinkContainer) {
+        if (isTrolleyMode && checkedInTrolley.length > 0) {
+          sinkContainer.classList.remove('hidden');
+          sinkContainer.innerHTML = `
+            <div class="bg-brand-sand/60 rounded-3xl border border-brand-border p-5 space-y-3 mt-6">
+              <div class="flex items-center justify-between">
+                <span class="font-serif font-bold text-sm text-brand-charcoal flex items-center gap-1.5">
+                  <svg class="w-4 h-4 text-brand-sage" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd"></path></svg>
+                  <span>In Your Trolley (${checkedInTrolley.length} item${checkedInTrolley.length > 1 ? 's' : ''})</span>
+                </span>
+                <span class="num-tabular text-xs font-bold text-brand-sage">
+                  R${checkedInTrolley.reduce((sum, i) => sum + i.price, 0).toFixed(2)}
+                </span>
+              </div>
+              <div class="grid sm:grid-cols-2 gap-2">
+                ${checkedInTrolley.map(item => `
+                  <div onclick="toggleCheck(${item.id})" class="flex items-center justify-between p-2 rounded-xl bg-white/70 border border-brand-border text-xs cursor-pointer hover:bg-white">
+                    <span class="line-through text-brand-muted font-medium">${item.name}</span>
+                    <span class="num-tabular font-bold text-brand-muted ml-2">R${item.price.toFixed(2)}</span>
+                  </div>
+                `).join('')}
+              </div>
+            </div>
+          `;
+        } else {
+          sinkContainer.classList.add('hidden');
+          sinkContainer.innerHTML = '';
+        }
+      }
+
+      // Update Spending Displays
+      document.getElementById('trolley-total-display').innerText = `R${calculatedTotal.toFixed(2)}`;
+      
+      const countEl = document.getElementById('trolley-status-count');
+      if (countEl) {
+        countEl.innerText = `${checkedItems.size} of ${SHOPPING_ITEMS.length} items checked in trolley`;
+      }
+
+      // Update Phase Breakdown Summary (Fixes P2 Math Decoupling)
+      const phaseSummaryEl = document.getElementById('active-phase-spend-summary');
+      if (phaseSummaryEl) {
+        if (currentShoppingFilter === 'all') {
+          phaseSummaryEl.innerText = `Entire Month: R${phaseCheckedSpend.toFixed(2)} / R${phaseTargetSpend.toFixed(2)}`;
+        } else {
+          phaseSummaryEl.innerText = `Active Phase: R${phaseCheckedSpend.toFixed(2)} of R${phaseTargetSpend.toFixed(2)} (${phaseCheckedItems}/${phaseTotalItems} items)`;
+        }
+      }
+
+      // Update Nav Badge
+      const navBadge = document.getElementById('nav-trolley-badge');
+      if (navBadge) navBadge.innerText = checkedItems.size;
+
+      // Update Mobile Sticky Trolley Bar
+      const barStatus = document.getElementById('trolley-bar-status');
+      const barSpend = document.getElementById('trolley-bar-spend');
+      if (barStatus) barStatus.innerText = `${checkedItems.size} / ${SHOPPING_ITEMS.length} Checked`;
+      if (barSpend) barSpend.innerText = `R${calculatedTotal.toFixed(2)} spent`;
+    }
+
+    // --- 4-WEEK CALENDAR LOGIC ---
+    function selectCalendarWeek(weekNum) {
+      currentSelectedWeek = weekNum;
+      document.querySelectorAll('.cal-btn').forEach(btn => {
+        btn.classList.remove('bg-brand-terracotta', 'text-white', 'border-brand-terracotta');
+        btn.classList.add('bg-brand-sand', 'text-brand-charcoal', 'border-brand-border');
+      });
+      const activeBtn = document.getElementById(`cal-btn-${weekNum}`);
+      if (activeBtn) {
+        activeBtn.classList.remove('bg-brand-sand', 'text-brand-charcoal', 'border-brand-border');
+        activeBtn.classList.add('bg-brand-terracotta', 'text-white', 'border-brand-terracotta');
+      }
+
+      const weekInfo = SCHEDULE_DATA[weekNum];
+      const tableContainer = document.getElementById('calendar-table-container');
+
+      let html = `
+        <div class="p-4 sm:p-5 bg-brand-sand/30 border-b border-brand-border flex items-center justify-between">
+          <span class="font-serif font-bold text-base sm:text-lg text-brand-charcoal">${weekInfo.theme}</span>
+          <span class="text-xs bg-white border border-brand-border px-3 py-1 rounded-full text-brand-muted font-medium">Week ${weekNum} of 4</span>
+        </div>
+        <div class="divide-y divide-brand-border text-xs">
+      `;
+
+      weekInfo.schedule.forEach(row => {
+        const isMaster = row.type.includes('Master') || row.type.includes('Batch');
+        html += `
+          <div 
+            onclick="openRecipeModal('${row.recipeId}', this)" 
+            tabindex="0"
+            role="button"
+            onkeydown="if(event.key==='Enter'||event.key===' '){event.preventDefault();openRecipeModal('${row.recipeId}', this);}"
+            class="p-4 flex flex-col sm:flex-row sm:items-center justify-between gap-2 hover:bg-brand-sand/40 transition cursor-pointer group"
+          >
+            <div class="sm:w-28 font-bold text-brand-charcoal">${row.day}</div>
+            <div class="flex-1">
+              <span class="font-semibold text-brand-charcoal text-sm block group-hover:text-brand-terracotta transition-colors">${row.meal}</span>
+              <span class="text-brand-muted text-[11px] leading-relaxed">${row.desc}</span>
+            </div>
+            <div class="sm:w-36 text-right flex sm:flex-col items-center sm:items-end justify-between">
+              <span class="inline-block px-2.5 py-0.5 rounded-full text-[10px] font-bold uppercase tracking-wider ${isMaster ? 'bg-brand-terracotta/10 text-brand-terracotta' : 'bg-brand-sageLight text-brand-sage'}">
+                ${row.type}
+              </span>
+              <span class="text-[11px] text-brand-terracotta group-hover:underline mt-1 font-medium hidden sm:inline">Inspect Recipe →</span>
+            </div>
+          </div>
+        `;
+      });
+
+      html += `</div>`;
+      tableContainer.innerHTML = html;
+    }
+
+    // --- DYNAMIC HERO FINANCIAL CALCULATIONS ---
+    function updateHeroFinancials() {
+      const monthTotal = SHOPPING_ITEMS.reduce((sum, item) => sum + item.price, 0);
+      const cap = 2500;
+      const margin = cap - monthTotal;
+
+      const totalEl = document.getElementById('hero-month-total');
+      const marginEl = document.getElementById('hero-margin-total');
+
+      if (totalEl) totalEl.innerText = `~R${monthTotal.toFixed(0)}`;
+      if (marginEl) marginEl.innerText = `+R${margin.toFixed(0)}`;
+    }
+
+    // Initialize application on DOM ready
+    window.addEventListener('DOMContentLoaded', () => {
+      applyTrolleyModeVisuals();
+      renderRecipeCards();
+      renderShopping();
+      selectCalendarWeek(1); // Week 1 default solves Jordan's confusion
+      updateHeroFinancials();
+    });
+  </script>
+</body>
+</html>
