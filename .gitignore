@@ -1,4 +1,50 @@
+# OS files
 .DS_Store
+.AppleDouble
+.LSOverride
+._*
 Thumbs.db
+ehthumbs.db
+Desktop.ini
+
+# Git worktrees
 worktree-*/
+.worktrees/
+
+# AI, design, and local agent tooling
 .impeccable/
+.claude/
+.codex/
+.cursor/
+.gemini/
+.windsurf/
+.agents/
+.aider*
+convo.md
+
+# Editors & IDEs
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+
+# Environment & secrets
+.env
+.env.*
+!.env.example
+
+# Netlify, Node, & build caches
+.netlify/
+node_modules/
+.cache/
+*.log
+npm-debug.log*
+yarn-debug.log*
+pnpm-debug.log*
+
+# Temporary & backup files
+*.tmp
+*.temp
+*.bak
+*.orig
